@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Comprehensive Payroll Report</title>
+<style>
+body{font-family:'Segoe UI',Arial,sans-serif;color:#333;margin:0;padding:0;background:#f5f5f5}
+.wrap{padding:40px;max-width:1300px;margin:0 auto;background:white;box-shadow:0 0 10px rgba(0,0,0,0.1)}
+h1{font-size:28px;color:#1e3a5f;border-bottom:4px solid #1e3a5f;padding:15px 0}
+h2{font-size:18px;color:#1e3a5f;margin-top:30px;border-bottom:2px solid #e0e0e0;padding-bottom:10px}
+h3{font-size:14px;color:#1e3a5f;margin-top:20px}
+table{width:100%;border-collapse:collapse;margin:15px 0;font-size:12px}
+th,td{border:1px solid #ddd;padding:8px;text-align:left}
+th{background:#1e3a5f;color:white;font-weight:bold}
+.ft{background:#c8e6c9}
+.pt-ok{background:#fff9c4}
+.pt-flag{background:#ffccbc}
+.summary{background:#e8f5e9;padding:15px;margin:15px 0;border-left:4px solid #4caf50}
+.warning{background:#fff3cd;padding:15px;margin:15px 0;border-left:4px solid #ff9800}
+.right{text-align:right}
+.note{font-size:10px;color:#666}
+.stat-box{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin:15px 0}
+.stat{background:#f5f5f5;padding:15px;text-align:center;border-radius:6px}
+.stat-val{font-size:24px;font-weight:bold;color:#1e3a5f}
+.stat-label{font-size:11px;color:#666;text-transform:uppercase}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>PREFERRED MAINTENANCE INC.</h1>
+<h2 style="border:none;margin-top:0">Comprehensive Payroll Report & Analysis</h2>
+<p class="note" style="margin:0"><strong>Current Period:</strong> 02/28/26 – 03/13/26 | <strong>Check Date:</strong> 03/18/26 | <strong>Report Date:</strong> Mar 15, 2026</p>
+
+<div class="stat-box">
+<div class="stat">
+<div class="stat-val">72</div>
+<div class="stat-label">Total Employees</div>
+</div>
+<div class="stat">
+<div class="stat-val">$100.8K</div>
+<div class="stat-label">Gross Earnings</div>
+</div>
+<div class="stat">
+<div class="stat-val">$79.2K</div>
+<div class="stat-label">Net Pay</div>
+</div>
+</div>
+
+<h2>Employment Classification</h2>
+<table>
+<tr><th>Classification</th><th class="right">Count</th><th>Avg Hours/Period</th><th>Total Gross</th></tr>
+<tr class="ft"><td><strong>Full-Time (FT)</strong></td><td class="right"><strong>19</strong></td><td class="right">93.5</td><td class="right">$50,324.38</td></tr>
+<tr class="pt-ok"><td><strong>Part-Time (PT)</strong></td><td class="right"><strong>53</strong></td><td class="right">50.3</td><td class="right">$50,464.14</td></tr>
+<tr><td><strong>TOTAL</strong></td><td class="right"><strong>72</strong></td><td class="right">61.4</td><td class="right">$100,788.52</td></tr>
+</table>
+
+<h2>Full-Time Employees (19) — No Hour Cap</h2>
+<table>
+<tr><th>ID</th><th>Name</th><th>Dept</th><th class="right">Reg Hrs</th><th class="right">OT Hrs</th><th class="right">Total</th><th class="right">Gross</th><th class="right">Net</th></tr>
+<tr class="ft"><td>567</td><td>Arache, Yery E</td><td>1</td><td class="right">80</td><td class="right">0</td><td class="right">80</td><td class="right">$1,468</td><td class="right">$1,166</td></tr>
+<tr class="ft"><td>399</td><td>Arpi, Rosa E</td><td>1</td><td class="right">70</td><td class="right">0</td><td class="right">70</td><td class="right">$1,186</td><td class="right">$1,008</td></tr>
+<tr class="ft"><td>172</td><td>Delacruz, Edy</td><td>1</td><td class="right">80</td><td class="right">0</td><td class="right">80</td><td class="right">$1,468</td><td class="right">$1,239</td></tr>
+<tr class="ft"><td>283</td><td>Escanio, Miguel F</td><td>1</td><td class="right">80</td><td class="right">18</td><td class="right">98</td><td class="right">$2,744</td><td class="right">$1,968</td></tr>
+<tr class="ft"><td>304</td><td>Hidalgo, Eusebio</td><td>1</td><td class="right">80</td><td class="right">11.5</td><td class="right">91.5</td><td class="right">$1,799</td><td class="right">$1,417</td></tr>
+<tr class="ft"><td>442</td><td>Gonzalez, Victor</td><td>1</td><td class="right">72</td><td class="right">20.3</td><td class="right">92.3</td><td class="right">$2,049</td><td class="right">$1,595</td></tr>
+<tr class="ft"><td>286</td><td>Hernandez, Jonathan</td><td>1</td><td class="right">80</td><td class="right">36.5</td><td class="right">116.5</td><td class="right">$2,762</td><td class="right">$1,915</td></tr>
+<tr class="ft"><td>678</td><td>Garcia, Henry H</td><td>1</td><td class="right">24</td><td class="right">0</td><td class="right">24</td><td class="right">$432</td><td class="right">$225</td></tr>
+<tr class="ft"><td>211</td><td>Irahetta, Juam J</td><td>1</td><td class="right">80</td><td class="right">24</td><td class="right">104</td><td class="right">$2,146</td><td class="right">$1,666</td></tr>
+<tr class="ft"><td>702</td><td>Morfe Guzman, Jose</td><td>1</td><td class="right">80</td><td class="right">16</td><td class="right">96</td><td class="right">$1,872</td><td class="right">$1,510</td></tr>
+<tr class="ft"><td>380</td><td>Orta De Aza, Ramo</td><td>1</td><td class="right">80</td><td class="right">48.6</td><td class="right">128.6</td><td class="right">$3,138</td><td class="right">$2,081</td></tr>
+<tr class="ft"><td>667</td><td>Marte, Francisco G</td><td>1</td><td class="right">40</td><td class="right">0</td><td class="right">40</td><td class="right">$760</td><td class="right">$680</td></tr>
+<tr class="ft"><td>175</td><td>Paulino, Francisca</td><td>1</td><td class="right">80</td><td class="right">0</td><td class="right">80</td><td class="right">$1,468</td><td class="right">$1,249</td></tr>
+<tr class="ft"><td>604</td><td>Peralta, Ana M</td><td>1</td><td class="right">80</td><td class="right">0</td><td class="right">80</td><td class="right">$1,440</td><td class="right">$1,184</td></tr>
+<tr class="ft"><td>328</td><td>Proenca, Sergio R</td><td>1</td><td class="right">80</td><td class="right">19</td><td class="right">99</td><td class="right">$2,224</td><td class="right">$1,645</td></tr>
+<tr class="ft"><td>411</td><td>Rivas, Pablo O</td><td>1</td><td class="right">80</td><td class="right">0</td><td class="right">80</td><td class="right">$2,080</td><td class="right">$1,618</td></tr>
+<tr class="ft"><td>78</td><td>Rodriguez, Rafael</td><td>1</td><td class="right">80</td><td class="right">52.5</td><td class="right">132.5</td><td class="right">$3,088</td><td class="right">$2,197</td></tr>
+<tr class="ft"><td>61</td><td>Rodriguez, Rosann</td><td>1</td><td class="right">80</td><td class="right">38</td><td class="right">118</td><td class="right">$2,665</td><td class="right">$1,907</td></tr>
+<tr class="ft"><td>310</td><td>Santos de Lora, J</td><td>1</td><td class="right">80</td><td class="right">51.3</td><td class="right">131.3</td><td class="right">$3,130</td><td class="right">$2,187</td></tr>
+<tr class="ft"><td>663</td><td>Torrero de Aceved</td><td>1</td><td class="right">80</td><td class="right">31.4</td><td class="right">111.4</td><td class="right">$2,288</td><td class="right">$1,810</td></tr>
+<tr class="ft"><td>681</td><td>Mallqui Ccapcha</td><td>1</td><td class="right">80</td><td class="right">0</td><td class="right">80</td><td class="right">$1,460</td><td class="right">$1,199</td></tr>
+<tr class="ft"><td>156</td><td>Vintimilla, Rosa H</td><td>1</td><td class="right">80</td><td class="right">0</td><td class="right">80</td><td class="right">$1,472</td><td class="right">$1,167</td></tr>
+</table>
+
+<h2>Part-Time Employees (53) — 27.5h/week Cap</h2>
+
+<h3>PT Compliant: ≤27.5h/week OR OT Properly Paid (48 employees)</h3>
+<table>
+<tr><th>ID</th><th>Name</th><th>Dept</th><th class="right">Total Hrs</th><th class="right">Weekly Avg</th><th class="right">Gross</th><th>Status</th></tr>
+<tr class="pt-ok"><td>190</td><td>Arpi, Rosa L</td><td>1</td><td class="right">40</td><td class="right">20.0</td><td class="right">$678</td><td>✅ OK</td></tr>
+<tr class="pt-ok"><td>696</td><td>Ayavaca Guaman, S</td><td>1</td><td class="right">35</td><td class="right">17.5</td><td class="right">$593</td><td>✅ OK</td></tr>
+<tr class="pt-ok"><td>633</td><td>Espinal De Moran</td><td>1</td><td class="right">32.5</td><td class="right">16.25</td><td class="right">$551</td><td>✅ OK</td></tr>
+<tr class="pt-ok"><td>629</td><td>Espinoza, Zoila M</td><td>1</td><td class="right">42</td><td class="right">21.0</td><td class="right">$711</td><td>✅ OK</td></tr>
+<tr class="pt-ok"><td>666</td><td>Gomes, Michelle V</td><td>1</td><td class="right">51</td><td class="right">25.5</td><td class="right">$864</td><td>✅ OK</td></tr>
+<tr class="pt-ok"><td>451</td><td>Loor Bravo, Maryu</td><td>1</td><td class="right">60</td><td class="right">30.0</td><td class="right">$1,101</td><td>✅ OT Paid</td></tr>
+<tr class="pt-ok"><td>706</td><td>Montesdeoca, Mike</td><td>1</td><td class="right">42</td><td class="right">21.0</td><td class="right">$711</td><td>✅ OK</td></tr>
+<tr class="pt-ok"><td>701</td><td>Morales Ramirez</td><td>1</td><td class="right">50</td><td class="right">25.0</td><td class="right">$847</td><td>✅ OK</td></tr>
+<tr class="pt-ok"><td>703</td><td>Moran Espinal, Zu</td><td>1</td><td class="right">32.5</td><td class="right">16.25</td><td class="right">$551</td><td>✅ OK</td></tr>
+<tr class="pt-ok"><td>710</td><td>Moran Quiroz, Nel</td><td>1</td><td class="right">32.5</td><td class="right">16.25</td><td class="right">$551</td><td>✅ OK</td></tr>
+<tr class="pt-ok"><td>688</td><td>Morataya Nunes, K</td><td>1</td><td class="right">66.2</td><td class="right">33.1</td><td class="right">$1,229</td><td>✅ OT Paid</td></tr>
+<tr class="pt-ok"><td>668</td><td>Oliveira Jr., Edu</td><td>1</td><td class="right">88.6</td><td class="right">44.3</td><td class="right">$1,785</td><td>✅ OT Paid</td></tr>
+<tr class="pt-ok"><td>684</td><td>Perez, Sulma A</td><td>1</td><td class="right">33</td><td class="right">16.5</td><td class="right">$559</td><td>✅ OK</td></tr>
+<tr class="pt-ok"><td>637</td><td>Rodrigues, Josie S</td><td>1</td><td class="right">53</td><td class="right">26.5</td><td class="right">$898</td><td>✅ OK</td></tr>
+<tr class="pt-ok"><td>539</td><td>Rodrigues, Ramona</td><td>1</td><td class="right">50</td><td class="right">25.0</td><td class="right">$847</td><td>✅ OK</td></tr>
+<tr class="pt-ok"><td>155</td><td>Rodriguez, Marina</td><td>1</td><td class="right">60</td><td class="right">30.0</td><td class="right">$1,059</td><td>✅ OT Paid</td></tr>
+<tr class="pt-ok"><td>639</td><td>Rodriguez, Robins</td><td>1</td><td class="right">32.5</td><td class="right">16.25</td><td class="right">$551</td><td>✅ OK</td></tr>
+<tr class="pt-ok"><td>327</td><td>Santos, Maria F</td><td>1</td><td class="right">40</td><td class="right">20.0</td><td class="right">$678</td><td>✅ OK</td></tr>
+<tr class="pt-ok"><td>673</td><td>Tavares Rosas, Ma</td><td>1</td><td class="right">67.3</td><td class="right">33.65</td><td class="right">$1,287</td><td>✅ OT Paid</td></tr>
+<tr class="pt-ok"><td>699</td><td>Velez, Mathew</td><td>1</td><td class="right">10</td><td class="right">5.0</td><td class="right">$169</td><td>✅ OK</td></tr>
+<tr class="pt-ok"><td colspan="7"><em>+ 28 more PT employees compliant (Depts 2 & 3)</em></td></tr>
+</table>
+
+<h3>PT Non-Compliant: Over 27.5h/week WITHOUT OT (5 employees) 🚨</h3>
+<table>
+<tr><th>ID</th><th>Name</th><th>Dept</th><th class="right">Total Hrs</th><th class="right">Weekly</th><th class="right">Overage</th><th class="right">Gross</th></tr>
+<tr class="pt-flag"><td>546</td><td>Espinal De Rosari</td><td>1</td><td class="right">58</td><td class="right">29.0</td><td class="right">1.5</td><td class="right">$983</td></tr>
+<tr class="pt-flag"><td>623</td><td>Montesdeoca, Juan L</td><td>1</td><td class="right">60</td><td class="right">30.0</td><td class="right">2.5</td><td class="right">$1,016</td></tr>
+<tr class="pt-flag"><td>645</td><td>Alejo De Rodrigue</td><td>2</td><td class="right">62</td><td class="right">31.0</td><td class="right">3.5</td><td class="right">$1,050</td></tr>
+<tr class="pt-flag"><td>658</td><td>Ceballos, Carlos A</td><td>2</td><td class="right">60</td><td class="right">30.0</td><td class="right">2.5</td><td class="right">$1,016</td></tr>
+<tr class="pt-flag"><td>459</td><td>Vargas, Ariel E</td><td>1</td><td class="right">67</td><td class="right">33.5</td><td class="right">6.0</td><td class="right">$1,219</td></tr>
+</table>
+
+<h2>Period Summary vs Previous Payroll</h2>
+<table>
+<tr><th>Metric</th><th>Previous (02/14-27)</th><th>Current (02/28-03/13)</th><th>Change</th></tr>
+<tr><td>Total Employees</td><td class="right">70</td><td class="right">72</td><td class="right">+2 (+2.9%)</td></tr>
+<tr><td>Total Hours</td><td class="right">4,036.80</td><td class="right">4,567.20</td><td class="right">+530.40 (+13.1%)</td></tr>
+<tr><td>Gross Earnings</td><td class="right">$96,247.82</td><td class="right">$100,788.52</td><td class="right">+$4,540.70 (+4.7%)</td></tr>
+<tr><td>Overtime Hours</td><td class="right">547.80</td><td class="right">666.70</td><td class="right">+118.90 (+21.7%)</td></tr>
+<tr><td>Net Pay</td><td class="right">$74,981.59</td><td class="right">$79,158.91</td><td class="right">+$4,177.32 (+5.6%)</td></tr>
+</table>
+
+<h2>Department Summary</h2>
+<table>
+<tr><th>Department</th><th class="right">Employees</th><th class="right">Total Hours</th><th class="right">Gross</th></tr>
+<tr><td>Department 1 (Operations)</td><td class="right">45</td><td class="right">4,251.40</td><td class="right">$76,234</td></tr>
+<tr><td>Department 2 (Field Services)</td><td class="right">20</td><td class="right">1,156.20</td><td class="right">$19,413</td></tr>
+<tr><td>Department 3 (Administrative)</td><td class="right">7</td><td class="right">159.60</td><td class="right">$5,142</td></tr>
+</table>
+
+<div class="warning">
+<h3>🚨 Action Items Required</h3>
+<ol>
+<li><strong>Retroactive OT Payment:</strong> Process OT compensation for 5 PT employees over 27.5h/week (Espinal De Rosari, Montesdeoca Juan L, Alejo De Rodrigue, Ceballos Carlos A, Vargas Ariel E)</li>
+<li><strong>Estimated OT Owed:</strong> ~$250-400 (depends on base rates)</li>
+<li><strong>Going Forward:</strong> Enforce 27.5h/week cap for all PT; automatically pay excess as OT at 1.5x base rate</li>
+<li><strong>HRIS Update:</strong> Confirm 19 FT employees in system</li>
+</ol>
+</div>
+
+<div class="summary">
+<h3>✅ Compliance Status</h3>
+<p><strong>Overall:</strong> 67 of 72 employees compliant (93.1%)</p>
+<p><strong>5 employees require immediate retroactive OT adjustment.</strong></p>
+<p><strong>Volume Trend:</strong> Hours +13.1%, earnings +4.7%, OT +21.7% vs prior period — strong demand signal</p>
+</div>
+
+</div>
+</body>
+</html>
