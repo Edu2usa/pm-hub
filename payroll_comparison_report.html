@@ -1,0 +1,1197 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Payroll Comparison Report</title>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+        .summary {
+            background: #ecf0f1;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .summary-item {
+            background: white;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .summary-item .number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        .summary-item .label {
+            font-size: 12px;
+            color: #7f8c8d;
+            text-transform: uppercase;
+            margin-top: 5px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 12px;
+        }
+        th {
+            background: #34495e;
+            color: white;
+            padding: 12px 8px;
+            text-align: left;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+        }
+        td {
+            padding: 10px 8px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+        .positive {
+            color: #27ae60;
+            font-weight: bold;
+        }
+        .negative {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        .neutral {
+            color: #95a5a6;
+        }
+        .highlight {
+            background-color: #fff3cd !important;
+        }
+        .employee-id {
+            font-family: monospace;
+            font-size: 11px;
+            color: #7f8c8d;
+        }
+        .currency {
+            text-align: right;
+        }
+        .hours {
+            text-align: right;
+        }
+        .header-info {
+            background: #e8f4f8;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .legend {
+            display: flex;
+            gap: 20px;
+            margin: 15px 0;
+            font-size: 12px;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .legend-box {
+            width: 20px;
+            height: 15px;
+            border-radius: 3px;
+        }
+        .legend-yellow {
+            background-color: #fff3cd;
+        }
+        @media print {
+            body { background: white; }
+            .container { box-shadow: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 Payroll Comparison Report</h1>
+        
+        <div class="header-info">
+            <strong>Comparison Period:</strong> payroll_complete.csv → payroll_reconciliation_03-15-26.csv<br>
+            <strong>Generated:</strong> 2026-03-26 19:13:12<br>
+            <strong>Note:</strong> Files have different structures - comparison normalized by Employee ID
+        </div>
+        
+        <div class="summary">
+            <h2>Summary</h2>
+            <div class="summary-grid">
+                <div class="summary-item">
+                    <div class="number">71</div>
+                    <div class="label">Employees Compared</div>
+                </div>
+                <div class="summary-item">
+                    <div class="number">65</div>
+                    <div class="label">Significant Hour Changes</div>
+                </div>
+                <div class="summary-item">
+                    <div class="number">64</div>
+                    <div class="label">Significant Pay Changes</div>
+                </div>
+                <div class="summary-item">
+                    <div class="number">$74,423</div>
+                    <div class="label">Total Gross Pay Change</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-box legend-yellow"></div>
+                <span>Significant change (>5 hours or >$200)</span>
+            </div>
+            <div class="legend-item">
+                <span class="positive">Green</span> = Increase
+            </div>
+            <div class="legend-item">
+                <span class="negative">Red</span> = Decrease
+            </div>
+        </div>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Employee ID</th>
+                    <th>Employee Name</th>
+                    <th class="hours">Hours Wk1</th>
+                    <th class="hours">Hours Wk2</th>
+                    <th class="hours">Hours Δ</th>
+                    <th class="currency">Gross Wk1</th>
+                    <th class="currency">Gross Wk2</th>
+                    <th class="currency">Gross Δ</th>
+                    <th class="currency">Net Wk1</th>
+                    <th class="currency">Net Wk2</th>
+                    <th class="currency">Net Δ</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                <tr class="highlight">
+                    <td class="employee-id">310</td>
+                    <td>Santos de Lora</td>
+                    <td class="hours">0.0</td>
+                    <td class="hours">131.3</td>
+                    <td class="hours positive">++131.3</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$3,130.48</td>
+                    <td class="currency positive">+$3,130.48</td>
+                    <td class="currency">$99.06</td>
+                    <td class="currency">$2,187.06</td>
+                    <td class="currency positive">+$2,088.00</td>
+                </tr>
+
+                <tr class="highlight">
+                    <td class="employee-id">78</td>
+                    <td>Rodriguez</td>
+                    <td class="hours">0.0</td>
+                    <td class="hours">132.5</td>
+                    <td class="hours positive">++132.5</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$3,087.69</td>
+                    <td class="currency positive">+$3,087.69</td>
+                    <td class="currency">$170.17</td>
+                    <td class="currency">$2,197.44</td>
+                    <td class="currency positive">+$2,027.27</td>
+                </tr>
+
+                <tr class="highlight">
+                    <td class="employee-id">380</td>
+                    <td>Orta De Aza</td>
+                    <td class="hours">0.0</td>
+                    <td class="hours">128.6</td>
+                    <td class="hours positive">++128.6</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$3,138.00</td>
+                    <td class="currency positive">+$3,138.00</td>
+                    <td class="currency">$151.36</td>
+                    <td class="currency">$2,081.04</td>
+                    <td class="currency positive">+$1,929.68</td>
+                </tr>
+
+                <tr class="highlight">
+                    <td class="employee-id">283</td>
+                    <td>Escanio</td>
+                    <td class="hours">0.0</td>
+                    <td class="hours">98.0</td>
+                    <td class="hours positive">++98.0</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$2,744.00</td>
+                    <td class="currency positive">+$2,744.00</td>
+                    <td class="currency">$162.97</td>
+                    <td class="currency">$1,967.76</td>
+                    <td class="currency positive">+$1,804.79</td>
+                </tr>
+
+                <tr class="highlight">
+                    <td class="employee-id">61</td>
+                    <td>Rodriguez</td>
+                    <td class="hours">0.0</td>
+                    <td class="hours">118.0</td>
+                    <td class="hours positive">++118.0</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$2,664.65</td>
+                    <td class="currency positive">+$2,664.65</td>
+                    <td class="currency">$130.90</td>
+                    <td class="currency">$1,907.08</td>
+                    <td class="currency positive">+$1,776.18</td>
+                </tr>
+
+                <tr class="highlight">
+                    <td class="employee-id">211</td>
+                    <td>Irahetta</td>
+                    <td class="hours">0.0</td>
+                    <td class="hours">104.0</td>
+                    <td class="hours positive">++104.0</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$2,146.00</td>
+                    <td class="currency positive">+$2,146.00</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$1,665.68</td>
+                    <td class="currency positive">+$1,665.68</td>
+                </tr>
+
+                <tr class="highlight">
+                    <td class="employee-id">411</td>
+                    <td>Rivas</td>
+                    <td class="hours">0.0</td>
+                    <td class="hours">80.0</td>
+                    <td class="hours positive">++80.0</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$2,080.00</td>
+                    <td class="currency positive">+$2,080.00</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$1,617.56</td>
+                    <td class="currency positive">+$1,617.56</td>
+                </tr>
+
+                <tr class="highlight">
+                    <td class="employee-id">286</td>
+                    <td>Hernandez</td>
+                    <td class="hours">0.0</td>
+                    <td class="hours">116.5</td>
+                    <td class="hours positive">++116.5</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$2,762.38</td>
+                    <td class="currency positive">+$2,762.38</td>
+                    <td class="currency">$314.61</td>
+                    <td class="currency">$1,914.68</td>
+                    <td class="currency positive">+$1,600.07</td>
+                </tr>
+
+                <tr class="highlight">
+                    <td class="employee-id">442</td>
+                    <td>Gonzalez</td>
+                    <td class="hours">0.0</td>
+                    <td class="hours">92.3</td>
+                    <td class="hours positive">++92.3</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$2,049.00</td>
+                    <td class="currency positive">+$2,049.00</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$1,594.50</td>
+                    <td class="currency positive">+$1,594.50</td>
+                </tr>
+
+                <tr class="highlight">
+                    <td class="employee-id">702</td>
+                    <td>Morfe Guzman</td>
+                    <td class="hours">0.0</td>
+                    <td class="hours">96.0</td>
+                    <td class="hours positive">++96.0</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$1,872.00</td>
+                    <td class="currency positive">+$1,872.00</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$1,509.99</td>
+                    <td class="currency positive">+$1,509.99</td>
+                </tr>
+
+                <tr class="highlight">
+                    <td class="employee-id">328</td>
+                    <td>Proenca</td>
+                    <td class="hours">0.0</td>
+                    <td class="hours">99.0</td>
+                    <td class="hours positive">++99.0</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$2,224.25</td>
+                    <td class="currency positive">+$2,224.25</td>
+                    <td class="currency">$162.97</td>
+                    <td class="currency">$1,645.29</td>
+                    <td class="currency positive">+$1,482.32</td>
+                </tr>
+
+                <tr class="highlight">
+                    <td class="employee-id">668</td>
+                    <td>Oliveira Jr.</td>
+                    <td class="hours">0.0</td>
+                    <td class="hours">90.3</td>
+                    <td class="hours positive">++90.3</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$1,786.32</td>
+                    <td class="currency positive">+$1,786.32</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$1,353.87</td>
+                    <td class="currency positive">+$1,353.87</td>
+                </tr>
+
+                <tr class="highlight">
+                    <td class="employee-id">304</td>
+                    <td>Hidalgo</td>
+                    <td class="hours">0.0</td>
+                    <td class="hours">91.5</td>
+                    <td class="hours positive">++91.5</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$1,799.13</td>
+                    <td class="currency positive">+$1,799.13</td>
+                    <td class="currency">$162.97</td>
+                    <td class="currency">$1,416.56</td>
+                    <td class="currency positive">+$1,253.59</td>
+                </tr>
+
+                <tr class="highlight">
+                    <td class="employee-id">175</td>
+                    <td>Paulino</td>
+                    <td class="hours">0.0</td>
+                    <td class="hours">80.0</td>
+                    <td class="hours positive">++80.0</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$1,468.00</td>
+                    <td class="currency positive">+$1,468.00</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$1,248.70</td>
+                    <td class="currency positive">+$1,248.70</td>
+                </tr>
+
+                <tr class="highlight">
+                    <td class="employee-id">172</td>
+                    <td>Delacruz</td>
+                    <td class="hours">0.0</td>
+                    <td class="hours">80.0</td>
+                    <td class="hours positive">++80.0</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$1,468.00</td>
+                    <td class="currency positive">+$1,468.00</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$1,238.70</td>
+                    <td class="currency positive">+$1,238.70</td>
+                </tr>
+
+                <tr class="highlight">
+                    <td class="employee-id">160</td>
+                    <td>Rodrigues</td>
+                    <td class="hours">0.0</td>
+                    <td class="hours">77.3</td>
+                    <td class="hours positive">++77.3</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$1,540.69</td>
+                    <td class="currency positive">+$1,540.69</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$1,209.87</td>
+                    <td class="currency positive">+$1,209.87</td>
+                </tr>
+
+                <tr class="highlight">
+                    <td class="employee-id">74</td>
+                    <td>Pereira</td>
+                    <td class="hours">0.0</td>
+                    <td class="hours">80.0</td>
+                    <td class="hours positive">++80.0</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$1,502.10</td>
+                    <td class="currency positive">+$1,502.10</td>
+                    <td class="currency">$50.00</td>
+                    <td class="currency">$1,235.30</td>
+                    <td class="currency positive">+$1,185.30</td>
+                </tr>
+
+                <tr class="highlight">
+                    <td class="employee-id">604</td>
+                    <td>Peralta</td>
+                    <td class="hours">0.0</td>
+                    <td class="hours">80.0</td>
+                    <td class="hours positive">++80.0</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$1,440.00</td>
+                    <td class="currency positive">+$1,440.00</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$1,184.03</td>
+                    <td class="currency positive">+$1,184.03</td>
+                </tr>
+
+                <tr class="highlight">
+                    <td class="employee-id">567</td>
+                    <td>Arache</td>
+                    <td class="hours">0.0</td>
+                    <td class="hours">80.0</td>
+                    <td class="hours positive">++80.0</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$1,468.00</td>
+                    <td class="currency positive">+$1,468.00</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$1,165.54</td>
+                    <td class="currency positive">+$1,165.54</td>
+                </tr>
+
+                <tr class="highlight">
+                    <td class="employee-id">156</td>
+                    <td>Vintimilla</td>
+                    <td class="hours">0.0</td>
+                    <td class="hours">80.0</td>
+                    <td class="hours positive">++80.0</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$1,472.00</td>
+                    <td class="currency positive">+$1,472.00</td>
+                    <td class="currency">$70.80</td>
+                    <td class="currency">$1,166.65</td>
+                    <td class="currency positive">+$1,095.85</td>
+                </tr>
+
+                <tr class="highlight">
+                    <td class="employee-id">554</td>
+                    <td>Patino</td>
+                    <td class="hours">0.0</td>
+                    <td class="hours">76.7</td>
+                    <td class="hours positive">++76.7</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$1,356.05</td>
+                    <td class="currency positive">+$1,356.05</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$1,067.16</td>
+                    <td class="currency positive">+$1,067.16</td>
+                </tr>
+
+                <tr class="highlight">
+                    <td class="employee-id">688</td>
+                    <td>Morataya Nunes</td>
+                    <td class="hours">0.0</td>
+                    <td class="hours">66.2</td>
+                    <td class="hours positive">++66.2</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$1,229.00</td>
+                    <td class="currency positive">+$1,229.00</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$1,030.32</td>
+                    <td class="currency positive">+$1,030.32</td>
+                </tr>
+
+                <tr class="highlight">
+                    <td class="employee-id">399</td>
+                    <td>Arpi</td>
+                    <td class="hours">0.0</td>
+                    <td class="hours">70.0</td>
+                    <td class="hours positive">++70.0</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$1,185.80</td>
+                    <td class="currency positive">+$1,185.80</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$1,008.22</td>
+                    <td class="currency positive">+$1,008.22</td>
+                </tr>
+
+                <tr class="highlight">
+                    <td class="employee-id">155</td>
+                    <td>Rodriguez</td>
+                    <td class="hours">0.0</td>
+                    <td class="hours">60.0</td>
+                    <td class="hours positive">++60.0</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$1,058.75</td>
+                    <td class="currency positive">+$1,058.75</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$951.77</td>
+                    <td class="currency positive">+$951.77</td>
+                </tr>
+
+                <tr class="highlight">
+                    <td class="employee-id">658</td>
+                    <td>Ceballos</td>
+                    <td class="hours">0.0</td>
+                    <td class="hours">60.0</td>
+                    <td class="hours positive">++60.0</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$1,016.40</td>
+                    <td class="currency positive">+$1,016.40</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$875.76</td>
+                    <td class="currency positive">+$875.76</td>
+                </tr>
+
+                <tr class="highlight">
+                    <td class="employee-id">695</td>
+                    <td>Amaya</td>
+                    <td class="hours">0.0</td>
+                    <td class="hours">56.0</td>
+                    <td class="hours positive">++56.0</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$1,016.40</td>
+                    <td class="currency positive">+$1,016.40</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$875.75</td>
+                    <td class="currency positive">+$875.75</td>
+                </tr>
+
+                <tr class="highlight">
+                    <td class="employee-id">623</td>
+                    <td>Montesdeoca</td>
+                    <td class="hours">0.0</td>
+                    <td class="hours">60.0</td>
+                    <td class="hours positive">++60.0</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$1,016.40</td>
+                    <td class="currency positive">+$1,016.40</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$860.81</td>
+                    <td class="currency positive">+$860.81</td>
+                </tr>
+
+                <tr class="highlight">
+                    <td class="employee-id">472</td>
+                    <td>Perez Espinal</td>
+                    <td class="hours">0.0</td>
+                    <td class="hours">60.0</td>
+                    <td class="hours positive">++60.0</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$1,016.40</td>
+                    <td class="currency positive">+$1,016.40</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$856.11</td>
+                    <td class="currency positive">+$856.11</td>
+                </tr>
+
+                <tr class="highlight">
+                    <td class="employee-id">451</td>
+                    <td>Loor Bravo</td>
+                    <td class="hours">0.0</td>
+                    <td class="hours">60.0</td>
+                    <td class="hours positive">++60.0</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$1,101.10</td>
+                    <td class="currency positive">+$1,101.10</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$853.33</td>
+                    <td class="currency positive">+$853.33</td>
+                </tr>
+
+                <tr class="highlight">
+                    <td class="employee-id">414</td>
+                    <td>Maradiaga</td>
+                    <td class="hours">0.0</td>
+                    <td class="hours">74.0</td>
+                    <td class="hours positive">++74.0</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$1,253.56</td>
+                    <td class="currency positive">+$1,253.56</td>
+                    <td class="currency">$100.00</td>
+                    <td class="currency">$946.14</td>
+                    <td class="currency positive">+$846.14</td>
+                </tr>
+
+                <tr class="highlight">
+                    <td class="employee-id">459</td>
+                    <td>Vargas</td>
+                    <td class="hours">0.0</td>
+                    <td class="hours">67.0</td>
+                    <td class="hours positive">++67.0</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$1,219.40</td>
+                    <td class="currency positive">+$1,219.40</td>
+                    <td class="currency">$61.25</td>
+                    <td class="currency">$833.73</td>
+                    <td class="currency positive">+$772.48</td>
+                </tr>
+
+                <tr class="highlight">
+                    <td class="employee-id">635</td>
+                    <td>Rodriguez</td>
+                    <td class="hours">0.0</td>
+                    <td class="hours">51.0</td>
+                    <td class="hours positive">++51.0</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$863.94</td>
+                    <td class="currency positive">+$863.94</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$761.85</td>
+                    <td class="currency positive">+$761.85</td>
+                </tr>
+
+                <tr class="highlight">
+                    <td class="employee-id">666</td>
+                    <td>Gomes</td>
+                    <td class="hours">0.0</td>
+                    <td class="hours">51.0</td>
+                    <td class="hours positive">++51.0</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$863.94</td>
+                    <td class="currency positive">+$863.94</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$761.85</td>
+                    <td class="currency positive">+$761.85</td>
+                </tr>
+
+                <tr class="highlight">
+                    <td class="employee-id">661</td>
+                    <td>Guerrero</td>
+                    <td class="hours">0.0</td>
+                    <td class="hours">50.0</td>
+                    <td class="hours positive">++50.0</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$847.00</td>
+                    <td class="currency positive">+$847.00</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$755.19</td>
+                    <td class="currency positive">+$755.19</td>
+                </tr>
+
+                <tr class="highlight">
+                    <td class="employee-id">637</td>
+                    <td>Rodrigues</td>
+                    <td class="hours">0.0</td>
+                    <td class="hours">53.0</td>
+                    <td class="hours positive">++53.0</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$897.82</td>
+                    <td class="currency positive">+$897.82</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$750.30</td>
+                    <td class="currency positive">+$750.30</td>
+                </tr>
+
+                <tr class="highlight">
+                    <td class="employee-id">33</td>
+                    <td>Tapia</td>
+                    <td class="hours">0.0</td>
+                    <td class="hours">42.0</td>
+                    <td class="hours positive">++42.0</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$786.24</td>
+                    <td class="currency positive">+$786.24</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$705.44</td>
+                    <td class="currency positive">+$705.44</td>
+                </tr>
+
+                <tr class="highlight">
+                    <td class="employee-id">667</td>
+                    <td>Marte</td>
+                    <td class="hours">0.0</td>
+                    <td class="hours">40.0</td>
+                    <td class="hours positive">++40.0</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$760.00</td>
+                    <td class="currency positive">+$760.00</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$680.10</td>
+                    <td class="currency positive">+$680.10</td>
+                </tr>
+
+                <tr class="highlight">
+                    <td class="employee-id">2</td>
+                    <td>Amaya</td>
+                    <td class="hours">0.0</td>
+                    <td class="hours">48.0</td>
+                    <td class="hours positive">++48.0</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$813.12</td>
+                    <td class="currency positive">+$813.12</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$665.91</td>
+                    <td class="currency positive">+$665.91</td>
+                </tr>
+
+                <tr class="highlight">
+                    <td class="employee-id">539</td>
+                    <td>Rodrigues</td>
+                    <td class="hours">0.0</td>
+                    <td class="hours">50.0</td>
+                    <td class="hours positive">++50.0</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$847.00</td>
+                    <td class="currency positive">+$847.00</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$653.92</td>
+                    <td class="currency positive">+$653.92</td>
+                </tr>
+
+                <tr class="highlight">
+                    <td class="employee-id">629</td>
+                    <td>Espinoza</td>
+                    <td class="hours">0.0</td>
+                    <td class="hours">42.0</td>
+                    <td class="hours positive">++42.0</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$711.48</td>
+                    <td class="currency positive">+$711.48</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$641.26</td>
+                    <td class="currency positive">+$641.26</td>
+                </tr>
+
+                <tr class="highlight">
+                    <td class="employee-id">706</td>
+                    <td>Montesdeoca</td>
+                    <td class="hours">0.0</td>
+                    <td class="hours">42.0</td>
+                    <td class="hours positive">++42.0</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$711.48</td>
+                    <td class="currency positive">+$711.48</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$641.26</td>
+                    <td class="currency positive">+$641.26</td>
+                </tr>
+
+                <tr class="highlight">
+                    <td class="employee-id">327</td>
+                    <td>Santos</td>
+                    <td class="hours">0.0</td>
+                    <td class="hours">40.0</td>
+                    <td class="hours positive">++40.0</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$677.60</td>
+                    <td class="currency positive">+$677.60</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$620.00</td>
+                    <td class="currency positive">+$620.00</td>
+                </tr>
+
+                <tr class="highlight">
+                    <td class="employee-id">302</td>
+                    <td>Bueno</td>
+                    <td class="hours">0.0</td>
+                    <td class="hours">40.0</td>
+                    <td class="hours positive">++40.0</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$677.60</td>
+                    <td class="currency positive">+$677.60</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$619.99</td>
+                    <td class="currency positive">+$619.99</td>
+                </tr>
+
+                <tr class="highlight">
+                    <td class="employee-id">665</td>
+                    <td>Riera</td>
+                    <td class="hours">0.0</td>
+                    <td class="hours">40.0</td>
+                    <td class="hours positive">++40.0</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$677.60</td>
+                    <td class="currency positive">+$677.60</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$611.20</td>
+                    <td class="currency positive">+$611.20</td>
+                </tr>
+
+                <tr class="highlight">
+                    <td class="employee-id">648</td>
+                    <td>Ordonez</td>
+                    <td class="hours">0.0</td>
+                    <td class="hours">40.0</td>
+                    <td class="hours positive">++40.0</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$677.60</td>
+                    <td class="currency positive">+$677.60</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$604.60</td>
+                    <td class="currency positive">+$604.60</td>
+                </tr>
+
+                <tr class="highlight">
+                    <td class="employee-id">190</td>
+                    <td>Arpi</td>
+                    <td class="hours">0.0</td>
+                    <td class="hours">40.0</td>
+                    <td class="hours positive">++40.0</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$677.60</td>
+                    <td class="currency positive">+$677.60</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$597.38</td>
+                    <td class="currency positive">+$597.38</td>
+                </tr>
+
+                <tr class="highlight">
+                    <td class="employee-id">12</td>
+                    <td>Jara</td>
+                    <td class="hours">0.0</td>
+                    <td class="hours">40.0</td>
+                    <td class="hours positive">++40.0</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$720.00</td>
+                    <td class="currency positive">+$720.00</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$582.43</td>
+                    <td class="currency positive">+$582.43</td>
+                </tr>
+
+                <tr class="highlight">
+                    <td class="employee-id">696</td>
+                    <td>Ayavaca Guaman</td>
+                    <td class="hours">0.0</td>
+                    <td class="hours">35.0</td>
+                    <td class="hours positive">++35.0</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$592.90</td>
+                    <td class="currency positive">+$592.90</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$543.80</td>
+                    <td class="currency positive">+$543.80</td>
+                </tr>
+
+                <tr class="highlight">
+                    <td class="employee-id">651</td>
+                    <td>Zepeda Rodas</td>
+                    <td class="hours">0.0</td>
+                    <td class="hours">35.0</td>
+                    <td class="hours positive">++35.0</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$592.90</td>
+                    <td class="currency positive">+$592.90</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$529.69</td>
+                    <td class="currency positive">+$529.69</td>
+                </tr>
+
+                <tr class="highlight">
+                    <td class="employee-id">632</td>
+                    <td>Velez</td>
+                    <td class="hours">0.0</td>
+                    <td class="hours">33.0</td>
+                    <td class="hours positive">++33.0</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$583.44</td>
+                    <td class="currency positive">+$583.44</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$526.61</td>
+                    <td class="currency positive">+$526.61</td>
+                </tr>
+
+                <tr class="highlight">
+                    <td class="employee-id">684</td>
+                    <td>Perez</td>
+                    <td class="hours">0.0</td>
+                    <td class="hours">33.0</td>
+                    <td class="hours positive">++33.0</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$559.02</td>
+                    <td class="currency positive">+$559.02</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$512.97</td>
+                    <td class="currency positive">+$512.97</td>
+                </tr>
+
+                <tr class="highlight">
+                    <td class="employee-id">639</td>
+                    <td>Rodriguez</td>
+                    <td class="hours">0.0</td>
+                    <td class="hours">32.5</td>
+                    <td class="hours positive">++32.5</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$550.55</td>
+                    <td class="currency positive">+$550.55</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$505.25</td>
+                    <td class="currency positive">+$505.25</td>
+                </tr>
+
+                <tr class="highlight">
+                    <td class="employee-id">710</td>
+                    <td>Moran Quiroz</td>
+                    <td class="hours">0.0</td>
+                    <td class="hours">32.5</td>
+                    <td class="hours positive">++32.5</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$550.55</td>
+                    <td class="currency positive">+$550.55</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$505.24</td>
+                    <td class="currency positive">+$505.24</td>
+                </tr>
+
+                <tr class="highlight">
+                    <td class="employee-id">703</td>
+                    <td>Moran Espinal</td>
+                    <td class="hours">0.0</td>
+                    <td class="hours">32.5</td>
+                    <td class="hours positive">++32.5</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$550.55</td>
+                    <td class="currency positive">+$550.55</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$490.68</td>
+                    <td class="currency positive">+$490.68</td>
+                </tr>
+
+                <tr class="highlight">
+                    <td class="employee-id">708</td>
+                    <td>Fajardo Marca</td>
+                    <td class="hours">0.0</td>
+                    <td class="hours">31.0</td>
+                    <td class="hours positive">++31.0</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$525.14</td>
+                    <td class="currency positive">+$525.14</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$482.02</td>
+                    <td class="currency positive">+$482.02</td>
+                </tr>
+
+                <tr class="highlight">
+                    <td class="employee-id">653</td>
+                    <td>Tardiff</td>
+                    <td class="hours">0.0</td>
+                    <td class="hours">30.0</td>
+                    <td class="hours positive">++30.0</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$508.20</td>
+                    <td class="currency positive">+$508.20</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$466.55</td>
+                    <td class="currency positive">+$466.55</td>
+                </tr>
+
+                <tr class="highlight">
+                    <td class="employee-id">636</td>
+                    <td>Jaquez</td>
+                    <td class="hours">0.0</td>
+                    <td class="hours">30.0</td>
+                    <td class="hours positive">++30.0</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$508.20</td>
+                    <td class="currency positive">+$508.20</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$461.15</td>
+                    <td class="currency positive">+$461.15</td>
+                </tr>
+
+                <tr class="highlight">
+                    <td class="employee-id">67</td>
+                    <td>Ortiz</td>
+                    <td class="hours">0.0</td>
+                    <td class="hours">30.0</td>
+                    <td class="hours positive">++30.0</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$508.20</td>
+                    <td class="currency positive">+$508.20</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$449.44</td>
+                    <td class="currency positive">+$449.44</td>
+                </tr>
+
+                <tr class="highlight">
+                    <td class="employee-id">687</td>
+                    <td>Calle</td>
+                    <td class="hours">0.0</td>
+                    <td class="hours">27.0</td>
+                    <td class="hours positive">++27.0</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$464.40</td>
+                    <td class="currency positive">+$464.40</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$426.55</td>
+                    <td class="currency positive">+$426.55</td>
+                </tr>
+
+                <tr class="highlight">
+                    <td class="employee-id">633</td>
+                    <td>Espinal DeMoran</td>
+                    <td class="hours">20.0</td>
+                    <td class="hours">32.5</td>
+                    <td class="hours positive">++12.5</td>
+                    <td class="currency">$338.80</td>
+                    <td class="currency">$550.55</td>
+                    <td class="currency positive">+$211.75</td>
+                    <td class="currency">$311.19</td>
+                    <td class="currency">$505.25</td>
+                    <td class="currency positive">+$194.06</td>
+                </tr>
+
+                <tr class="highlight">
+                    <td class="employee-id">655</td>
+                    <td>Castro</td>
+                    <td class="hours">0.0</td>
+                    <td class="hours">12.0</td>
+                    <td class="hours positive">++12.0</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$203.28</td>
+                    <td class="currency positive">+$203.28</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$186.72</td>
+                    <td class="currency positive">+$186.72</td>
+                </tr>
+
+                <tr class="highlight">
+                    <td class="employee-id">663</td>
+                    <td>Torrero de Aceved</td>
+                    <td class="hours">106.6</td>
+                    <td class="hours">111.4</td>
+                    <td class="hours positive">++4.8</td>
+                    <td class="currency">$2,038.30</td>
+                    <td class="currency">$2,287.80</td>
+                    <td class="currency positive">+$249.50</td>
+                    <td class="currency">$1,626.36</td>
+                    <td class="currency">$1,809.95</td>
+                    <td class="currency positive">+$183.59</td>
+                </tr>
+
+                <tr class="highlight">
+                    <td class="employee-id">681</td>
+                    <td>Mallqui Ccapcha</td>
+                    <td class="hours">72.0</td>
+                    <td class="hours">80.0</td>
+                    <td class="hours positive">++8.0</td>
+                    <td class="currency">$1,224.00</td>
+                    <td class="currency">$1,460.00</td>
+                    <td class="currency positive">+$236.00</td>
+                    <td class="currency">$1,026.54</td>
+                    <td class="currency">$1,199.19</td>
+                    <td class="currency positive">+$172.65</td>
+                </tr>
+
+                <tr class="highlight">
+                    <td class="employee-id">699</td>
+                    <td>Velez</td>
+                    <td class="hours">0.0</td>
+                    <td class="hours">10.0</td>
+                    <td class="hours positive">++10.0</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$169.40</td>
+                    <td class="currency positive">+$169.40</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$155.59</td>
+                    <td class="currency positive">+$155.59</td>
+                </tr>
+
+                <tr class="highlight">
+                    <td class="employee-id">709</td>
+                    <td>Fajardo Ordones</td>
+                    <td class="hours">36.0</td>
+                    <td class="hours">30.0</td>
+                    <td class="hours negative">-6.0</td>
+                    <td class="currency">$609.84</td>
+                    <td class="currency">$508.20</td>
+                    <td class="currency negative">$-101.64</td>
+                    <td class="currency">$559.10</td>
+                    <td class="currency">$466.55</td>
+                    <td class="currency negative">$-92.55</td>
+                </tr>
+
+                <tr class="highlight">
+                    <td class="employee-id">678</td>
+                    <td>Garcia</td>
+                    <td class="hours">0.0</td>
+                    <td class="hours">24.0</td>
+                    <td class="hours positive">++24.0</td>
+                    <td class="currency">$0.00</td>
+                    <td class="currency">$432.00</td>
+                    <td class="currency positive">+$432.00</td>
+                    <td class="currency">$244.78</td>
+                    <td class="currency">$225.19</td>
+                    <td class="currency negative">$-19.59</td>
+                </tr>
+
+                <tr class="">
+                    <td class="employee-id">691</td>
+                    <td>Hernandez Farias</td>
+                    <td class="hours">50.0</td>
+                    <td class="hours">50.0</td>
+                    <td class="hours neutral">+0.0</td>
+                    <td class="currency">$847.00</td>
+                    <td class="currency">$847.00</td>
+                    <td class="currency neutral">$0.00</td>
+                    <td class="currency">$771.41</td>
+                    <td class="currency">$757.99</td>
+                    <td class="currency negative">$-13.42</td>
+                </tr>
+
+                <tr class="">
+                    <td class="employee-id">697</td>
+                    <td>Zhingre Baculima</td>
+                    <td class="hours">27.0</td>
+                    <td class="hours">27.0</td>
+                    <td class="hours neutral">+0.0</td>
+                    <td class="currency">$457.38</td>
+                    <td class="currency">$464.40</td>
+                    <td class="currency positive">+$7.02</td>
+                    <td class="currency">$420.10</td>
+                    <td class="currency">$426.55</td>
+                    <td class="currency positive">+$6.45</td>
+                </tr>
+
+                <tr class="">
+                    <td class="employee-id">701</td>
+                    <td>Morales Ramirez</td>
+                    <td class="hours">50.0</td>
+                    <td class="hours">50.0</td>
+                    <td class="hours neutral">+0.0</td>
+                    <td class="currency">$847.00</td>
+                    <td class="currency">$847.00</td>
+                    <td class="currency neutral">$0.00</td>
+                    <td class="currency">$755.19</td>
+                    <td class="currency">$755.18</td>
+                    <td class="currency negative">$-0.01</td>
+                </tr>
+
+                <tr class="">
+                    <td class="employee-id">546</td>
+                    <td>Espinal De Rosari</td>
+                    <td class="hours">58.0</td>
+                    <td class="hours">58.0</td>
+                    <td class="hours neutral">+0.0</td>
+                    <td class="currency">$982.52</td>
+                    <td class="currency">$982.52</td>
+                    <td class="currency neutral">$0.00</td>
+                    <td class="currency">$813.66</td>
+                    <td class="currency">$813.66</td>
+                    <td class="currency neutral">$0.00</td>
+                </tr>
+
+                <tr class="">
+                    <td class="employee-id">645</td>
+                    <td>Alejo De Rodrigue</td>
+                    <td class="hours">62.0</td>
+                    <td class="hours">62.0</td>
+                    <td class="hours neutral">+0.0</td>
+                    <td class="currency">$1,050.28</td>
+                    <td class="currency">$1,050.28</td>
+                    <td class="currency neutral">$0.00</td>
+                    <td class="currency">$855.15</td>
+                    <td class="currency">$855.15</td>
+                    <td class="currency neutral">$0.00</td>
+                </tr>
+
+            </tbody>
+        </table>
+        
+        <p style="font-size: 12px; color: #7f8c8d; margin-top: 30px;">
+            Report generated by OpenClaw Payroll Comparison System
+        </p>
+    </div>
+</body>
+</html>
