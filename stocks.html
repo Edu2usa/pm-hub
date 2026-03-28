@@ -66,7 +66,7 @@
             </tr>
           </thead>
           <tbody id="oversoldTable" class="text-gray-300">
-            <tr><td colspan="6" class="py-4 text-center text-gray-500">Click "Analyze" on a ticker to add to list</td></tr>
+            <tr><td colspan="6" class="py-4 text-center text-gray-500">Enter a ticker above to analyze</td></tr>
           </tbody>
         </table>
       </div>
@@ -97,24 +97,18 @@
   </main>
 
   <script>
-    const oversold = [];
-    const marketNames = {US:['Apple','Microsoft','Meta','Google','Amazon','Netflix','NVDA','AMD','Intel','Disney'],TH:['SCB','KBANK','PTT','TRUE','ADVANC','BDMS']};
-    const thTickers=['SCB','KBANK','PTT','TRUE','ADVANC','BDMS','CPALL','GULF','BGRIM','SCC'];
-
     async function lookupTicker() {
       const t = document.getElementById('ticker').value.trim().toUpperCase();
-      const market = document.getElementById('market').value;
-      if(!t) return;
+      if (!t) return;
       document.getElementById('result').classList.add('hidden');
       document.getElementById('loading').classList.remove('hidden');
       document.getElementById('status').textContent = 'Fetching...';
       try {
-        // Try Yahoo Finance
-        const r = await fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${t}?interval=1d&range=3mo`);
+        const r = await fetch(`/api/stock?ticker=${encodeURIComponent(t)}`);
         const d = await r.json();
         document.getElementById('loading').classList.add('hidden');
         document.getElementById('status').textContent = 'Ready';
-        if(d.chart?.result) {
+        if (d && d.chart && d.chart.result) {
           const q = d.chart.result[0];
           const meta = q.meta;
           const closes = q.indicators.quote[0].close.filter(Boolean);
@@ -132,7 +126,6 @@
               <div><div class="text-xs text-gray-500">Signal</div><div class="text-xl font-bold ${color}">${sig}</div></div>
             </div>`;
           document.getElementById('result').classList.remove('hidden');
-          // Add to table
           const row = `<tr class="border-b border-blue-900/20">
             <td class="py-2 pr-4 font-mono font-bold text-blue-400">${t}</td>
             <td class="py-2 pr-4">${meta.shortName||meta.symbol}</td>
@@ -140,9 +133,9 @@
             <td class="py-2 pr-4 text-right font-bold ${color}">${willr.toFixed(1)}</td>
             <td class="py-2 pr-4 text-right">${rsi.toFixed(1)}</td>
             <td class="py-2 text-right ${color}">${sig}</td></tr>`;
-          const existing = document.querySelector(`#oversoldTable tr td:first-child`)?.textContent;
-          if(existing === t) document.querySelector(`#oversoldTable tr:first-child`)?.remove();
-          document.getElementById('oversoldTable').insertAdjacentHTML('afterbegin',row);
+          const existing = document.querySelector(`#oversoldTable tr td.font-mono`);
+          if(existing) existing.parentElement.remove();
+          document.getElementById('oversoldTable').insertAdjacentHTML('afterbegin', row);
         } else {
           document.getElementById('result').innerHTML=`<div class="text-red-400">Ticker "${t}" not found. Try US tickers like AAPL, MSFT, UUUU.</div>`;
           document.getElementById('result').classList.remove('hidden');
@@ -156,7 +149,7 @@
     }
 
     function calcRSI(closes, period=14) {
-      if(closes.length < period+1) return 50;
+      if (closes.length < period+1) return 50;
       let gains=0,losses=0;
       for(let i=closes.length-period;i<closes.length;i++){
         const diff=closes[i]-closes[i-1];
@@ -164,10 +157,10 @@
       }
       const avgGain=gains/period,avgLoss=losses/period;
       if(avgLoss===0)return 100;
-      const rs=avgGain/avgLoss;
-      return 100-(100/(1+rs));
+      return 100-(100/(1+avgGain/avgLoss));
     }
-    function calcWilliamsR(highs,lows,closes) {
+
+    function calcWilliamsR(highs, lows, closes) {
       const n=14;
       const hi=Math.max(...highs.slice(-n));
       const lo=Math.min(...lows.slice(-n));
@@ -176,7 +169,7 @@
       return ((hi-last)/(hi-lo))*(-100);
     }
 
-    document.getElementById('ticker').addEventListener('keydown',e=>{if(e.key==='Enter')lookupTicker()});
+    document.getElementById('ticker').addEventListener('keydown', e => { if(e.key==='Enter') lookupTicker(); });
   </script>
 </body>
 </html>
