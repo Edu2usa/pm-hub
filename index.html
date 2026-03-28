@@ -49,7 +49,7 @@
     <!-- Hero -->
     <section class="max-w-6xl mx-auto px-6 pt-12 pb-8 text-center">
       <h2 class="text-4xl font-bold mb-3">Your Command Center</h2>
-      <p class="text-gray-400 text-lg max-w-xl mx-auto">Access all your Preferred Maintenance applications from one place. Click any card to launch.</p>
+      <p class="text-gray-400 text-lg max-w-xl mx-auto">Access all your Preferred Maintenance applications from one place.</p>
       <div class="mt-4 inline-flex items-center gap-2 bg-blue-900/30 border border-blue-700/40 rounded-full px-4 py-1.5 text-sm text-blue-300">
         <span class="text-xs">🔗</span> Live apps · Updated March 28, 2026
       </div>
@@ -89,31 +89,26 @@
           emoji: "🎯",
           name: "LeadScout",
           desc: "B2B lead generation for janitorial contracts. Find qualified prospects by city, category, radius.",
-          link: "#leads",
+          link: "leads.html",
+          internal: true,
           status: "live",
           tag: "Sales"
         },
         {
           emoji: "📊",
           name: "Stock Screener",
-          desc: "Munger-style value screening — oversold Williams %R signals + Buffett fundamental filters.",
-          link: "#stocks",
+          desc: "Live ticker lookup with Williams %R, RSI, and Munger-style value screening.",
+          link: "stocks.html",
+          internal: true,
           status: "live",
           tag: "Finance"
         },
         {
-          emoji: "✈️",
-          name: "Telegram Bot",
-          desc: "OpenClaw agent via Telegram. Chat, send files, get alerts, run agents — anywhere.",
-          link: "https://t.me/prometheus_ol_bot",
-          status: "live",
-          tag: "Communication"
-        },
-        {
           emoji: "📄",
           name: "Payroll Reports",
-          desc: "Biweekly payroll reconciliation, ACA compliance tracking, full-time hour monitoring.",
-          link: "#payroll",
+          desc: "Biweekly payroll reconciliation, ACA compliance tracking, FT/PT hour monitoring.",
+          link: "payroll.html",
+          internal: true,
           status: "live",
           tag: "HR / Finance"
         }
@@ -130,7 +125,7 @@
         const s = statusColors[app.status] || statusColors.live;
         grid.innerHTML += `
           <div class="card rounded-xl p-6 transition-all duration-300 flex flex-col gap-4 cursor-pointer"
-               onclick="window.open('${app.link}', '${app.link === '#' ? '_self' : '_blank'}')">
+               onclick="window.open('${app.link}', '${app.internal ? '_self' : '_blank'}')">
             <div class="flex items-start justify-between">
               <span class="text-4xl">${app.emoji}</span>
               <span class="${s.badge} text-xs px-2 py-0.5 rounded-full font-medium">
