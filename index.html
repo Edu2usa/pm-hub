@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🫒 Preferred Maintenance — Operations Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              navy: { 900: '#0B1120', 800: '#0F172A', 700: '#1E293B', 600: '#334155' },
+              accent: { 400: '#60A5FA', 500: '#3B82F6', 600: '#2563EB' }
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      body { background: linear-gradient(135deg, #0B1120 0%, #1E293B 100%); }
+      .card { background: linear-gradient(145deg, rgba(59,130,246,0.08), rgba(14,165,233,0.05)); border: 1px solid rgba(59,130,246,0.2); }
+      .card:hover { border-color: rgba(59,130,246,0.6); background: linear-gradient(145deg, rgba(59,130,246,0.15), rgba(14,165,233,0.08)); transform: translateY(-3px); box-shadow: 0 16px 40px rgba(37,99,235,0.15); }
+      .btn-primary { background: linear-gradient(135deg, #3B82F6, #0EA5E9); }
+      .btn-primary:hover { background: linear-gradient(135deg, #2563EB, #0284C7); }
+      .status-dot { animation: pulse 2s infinite; }
+      @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+      .gradient-text { background: linear-gradient(135deg, #60A5FA, #0EA5E9); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    </style>
+  </head>
+  <body class="min-h-screen text-gray-100 font-sans">
+    <!-- Header -->
+    <header class="border-b border-blue-900/40 bg-navy-900/60 backdrop-blur-sm sticky top-0 z-10">
+      <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <span class="text-3xl">🫒</span>
+          <div>
+            <h1 class="text-xl font-bold text-white">Preferred Maintenance</h1>
+            <p class="text-xs text-blue-400">Operations Hub</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2 text-xs text-gray-400">
+          <span class="status-dot w-2 h-2 rounded-full bg-green-400 inline-block"></span>
+          All systems operational
+        </div>
+      </div>
+    </header>
+
+    <!-- Hero -->
+    <section class="max-w-6xl mx-auto px-6 pt-12 pb-8 text-center">
+      <h2 class="text-4xl font-bold mb-3">Your Command Center</h2>
+      <p class="text-gray-400 text-lg max-w-xl mx-auto">Access all your Preferred Maintenance applications from one place. Click any card to launch.</p>
+      <div class="mt-4 inline-flex items-center gap-2 bg-blue-900/30 border border-blue-700/40 rounded-full px-4 py-1.5 text-sm text-blue-300">
+        <span class="text-xs">🔗</span> Live apps · Updated March 28, 2026
+      </div>
+    </section>
+
+    <!-- App Grid -->
+    <main class="max-w-6xl mx-auto px-6 pb-16">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5" id="app-grid">
+        <!-- Cards injected by JS -->
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-blue-900/40 py-6 text-center text-xs text-gray-500">
+      <p>Preferred Maintenance Inc · Powered by OpenClaw AI</p>
+    </footer>
+
+    <script>
+      const apps = [
+        {
+          emoji: "🤖",
+          name: "Prometheus Dashboard",
+          desc: "Agent orchestration, session tracking, system health, and real-time agent communication.",
+          link: "https://prometheus-dashboard.vercel.app",
+          status: "live",
+          tag: "Agent AI"
+        },
+        {
+          emoji: "📟",
+          name: "Equipment Tracker",
+          desc: "Mobile-friendly asset management — log maintenance, track transfers, manage accounts.",
+          link: "https://equipment-tracker-mu.vercel.app",
+          status: "live",
+          tag: "Operations"
+        },
+        {
+          emoji: "🎯",
+          name: "LeadScout",
+          desc: "B2B lead generation for janitorial contracts. Find qualified prospects by city, category, radius.",
+          link: "#leads",
+          status: "live",
+          tag: "Sales"
+        },
+        {
+          emoji: "📊",
+          name: "Stock Screener",
+          desc: "Munger-style value screening — oversold Williams %R signals + Buffett fundamental filters.",
+          link: "#stocks",
+          status: "live",
+          tag: "Finance"
+        },
+        {
+          emoji: "✈️",
+          name: "Telegram Bot",
+          desc: "OpenClaw agent via Telegram. Chat, send files, get alerts, run agents — anywhere.",
+          link: "https://t.me/prometheus_ol_bot",
+          status: "live",
+          tag: "Communication"
+        },
+        {
+          emoji: "📄",
+          name: "Payroll Reports",
+          desc: "Biweekly payroll reconciliation, ACA compliance tracking, full-time hour monitoring.",
+          link: "#payroll",
+          status: "live",
+          tag: "HR / Finance"
+        }
+      ];
+
+      const statusColors = {
+        live: { dot: "bg-green-400", label: "Live", badge: "bg-green-900/50 text-green-300 border border-green-700/50" },
+        beta: { dot: "bg-yellow-400", label: "Beta", badge: "bg-yellow-900/50 text-yellow-300 border border-yellow-700/50" },
+        deprecated: { dot: "bg-red-400", label: "Deprecated", badge: "bg-red-900/50 text-red-300 border border-red-700/50" }
+      };
+
+      const grid = document.getElementById("app-grid");
+      apps.forEach(app => {
+        const s = statusColors[app.status] || statusColors.live;
+        grid.innerHTML += `
+          <div class="card rounded-xl p-6 transition-all duration-300 flex flex-col gap-4 cursor-pointer"
+               onclick="window.open('${app.link}', '${app.link === '#' ? '_self' : '_blank'}')">
+            <div class="flex items-start justify-between">
+              <span class="text-4xl">${app.emoji}</span>
+              <span class="${s.badge} text-xs px-2 py-0.5 rounded-full font-medium">
+                <span class="${s.dot} w-1.5 h-1.5 rounded-full inline-block mr-1 ${app.status === 'live' ? 'status-dot' : ''}"></span>
+                ${s.label}
+              </span>
+            </div>
+            <div>
+              <h3 class="text-white font-semibold text-base mb-1">${app.name}</h3>
+              <span class="text-xs text-blue-400 font-medium">${app.tag}</span>
+            </div>
+            <p class="text-gray-400 text-sm leading-relaxed flex-1">${app.desc}</p>
+            <div class="btn-primary text-white text-sm font-semibold py-2.5 px-4 rounded-lg text-center">
+              Open App →
+            </div>
+          </div>
+        `;
+      });
+    </script>
+  </body>
+</html>
