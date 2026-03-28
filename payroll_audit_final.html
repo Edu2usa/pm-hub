@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Final Payroll Audit Report</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f5f5f5; padding: 40px 20px; }
+        .container { max-width: 950px; margin: 0 auto; background: white; padding: 45px; box-shadow: 0 4px 12px rgba(0,0,0,0.12); }
+        .header { border-bottom: 3px solid #1a3a5f; padding-bottom: 20px; margin-bottom: 30px; }
+        h1 { color: #1a3a5f; font-size: 32px; margin-bottom: 5px; }
+        .audit-meta { color: #666; font-size: 12px; margin-top: 8px; }
+        h2 { color: #1a3a5f; margin-top: 35px; margin-bottom: 15px; font-size: 16px; border-left: 4px solid #2a5a8a; padding-left: 12px; }
+        h3 { color: #2a5a8a; font-size: 13px; margin-top: 18px; margin-bottom: 10px; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+        th { background: #2a5a8a; color: white; padding: 11px; text-align: center; font-weight: 600; font-size: 11px; }
+        td { padding: 9px; text-align: center; border: 1px solid #ddd; font-size: 10px; }
+        tr:nth-child(even) { background: #f9f9f9; }
+        tr:last-child { background: #e8f0f7; font-weight: 600; }
+        .status-ok { color: #28a745; font-weight: 600; }
+        .status-warn { color: #ff6b6b; font-weight: 600; }
+        .status-high { color: #cc0000; font-weight: 700; }
+        .alert-box { padding: 15px; margin: 15px 0; border-radius: 5px; font-size: 11px; line-height: 1.6; }
+        .alert-critical { background: #fff3cd; border-left: 4px solid #ff6b6b; color: #333; }
+        .alert-info { background: #d1ecf1; border-left: 4px solid #0c5460; color: #0c5460; }
+        .alert-success { background: #d4edda; border-left: 4px solid #28a745; color: #155724; }
+        .metrics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0; }
+        .metric-card { background: #f8f9fa; padding: 15px; border-radius: 5px; border: 1px solid #dee2e6; }
+        .metric-label { font-size: 10px; color: #666; text-transform: uppercase; letter-spacing: 0.5px; }
+        .metric-value { font-size: 18px; font-weight: 700; color: #1a3a5f; margin-top: 5px; }
+        .metric-sub { font-size: 9px; color: #999; margin-top: 3px; }
+        .footer { text-align: center; color: #999; font-size: 9px; margin-top: 45px; padding-top: 20px; border-top: 1px solid #ddd; }
+        @media print { body { padding: 0; } .container { box-shadow: none; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>FINAL PAYROLL AUDIT REPORT</h1>
+            <p class="audit-meta">Preferred Maintenance Inc | Period: Jan 3 - Feb 27, 2026 | Generated: Mar 7, 2026 11:09 AM EST</p>
+            <p class="audit-meta" style="margin-top:8px;"><strong>Classification Updated:</strong> Francisco Marte, Mallqui, Jose Morfe, Ariel Vargas reclassified as FULL-TIME</p>
+        </div>
+
+        <h2>VACATION PAY ANALYSIS</h2>
+        <div class="alert-box alert-success">
+            <strong>✅ Vacation Does NOT Explain Headcount Drop</strong>
+        </div>
+
+        <h3>Employees Who Took Vacation</h3>
+        <table>
+            <tr><th>Employee Name</th><th>ID</th><th>Pay Period</th><th>Vacation Hours</th><th>Vacation Pay</th></tr>
+            <tr><td>Hidalgo, Eusebio</td><td>304</td><td>Period 1 (01/03-01/16)</td><td>120.0 hrs</td><td>$2,124.00</td></tr>
+            <tr><td>Proenca, Sergio R</td><td>328</td><td>Period 1 (01/03-01/16)</td><td>40.0 hrs</td><td>$788.00</td></tr>
+            <tr><td>Proenca, Sergio R</td><td>328</td><td>Period 2 (01/17-01/30)</td><td>40.0 hrs</td><td>$788.00</td></tr>
+            <tr><td>Vargas, Ariel E</td><td>459</td><td>Period 2 (01/17-01/30)</td><td>70.0 hrs</td><td>$1,225.00</td></tr>
+            <tr><td>Orta De Aza, Ramon A</td><td>380</td><td>Period 3 (01/31-02/13)</td><td>80.0 hrs</td><td>$1,600.00</td></tr>
+            <tr><td>Gonzalez, Victor</td><td>442</td><td>Period 4 (02/14-02/27)</td><td>80.0 hrs</td><td>$1,600.00</td></tr>
+            <tr><td colspan="5" style="text-align:right;"><strong>Total Vacation Hours: 430 hrs | Total Vacation Pay: $8,125.00</strong></td></tr>
+        </table>
+
+        <div class="alert-box alert-info">
+            <strong>Conclusion:</strong> Only 5 employees took paid vacation (6.5% of staff). These employees were PAID for their time while on vacation — they did not require replacement coverage. The 2-person headcount reduction is due to genuine employee separations, not vacation time.
+        </div>
+
+        <h2>HEADCOUNT DROP EXPLANATION (77 → 75)</h2>
+        <table>
+            <tr><th>Employee</th><th>ID</th><th>Departure</th><th>Last Period</th><th>Status</th></tr>
+            <tr><td>Garcia, Delvis M</td><td>705</td><td>After Period 1</td><td>Period 1</td><td>✓ Separated</td></tr>
+            <tr><td>Marte, Francisco G</td><td>667</td><td>After Period 3</td><td>Period 3</td><td>✓ Separated</td></tr>
+        </table>
+
+        <div class="alert-box alert-success">
+            <strong>✅ Headcount Reduction Explanation:</strong> Two employees departed the company. This is a normal business operation, not a staffing issue related to vacation coverage.
+        </div>
+
+        <h2>ACA PART-TIME COMPLIANCE AUDIT (REVISED)</h2>
+        <div class="alert-box alert-info">
+            <strong>Classification Update:</strong> Francisco Marte (ID 667), Mallqui Ccapcha (ID 681), Jose Morfe (ID 702), and Ariel Vargas (ID 459) are FULL-TIME employees. They have been removed from part-time ACA audit.
+        </div>
+
+        <h3>🚨 CRITICAL: Part-Time Employees Exceeding 29.5 hrs/week (ALL FOUR PERIODS)</h3>
+        <table>
+            <tr><th>Employee Name</th><th>ID</th><th>Avg Hours/Week</th><th>Status</th></tr>
+            <tr><td>Arpi, Rosa E</td><td>399</td><td>35.0 hrs/week</td><td class="status-high">🔴 HIGH RISK</td></tr>
+            <tr><td>Montesdeoca, Juan L</td><td>623</td><td>30.0 hrs/week</td><td class="status-high">🔴 HIGH RISK</td></tr>
+            <tr><td>Rodriguez, Marina</td><td>155</td><td>30.0 hrs/week</td><td class="status-high">🔴 HIGH RISK</td></tr>
+            <tr><td>Morataya Nunes, K...</td><td>688</td><td>33.1 hrs/week</td><td class="status-high">🔴 HIGH RISK</td></tr>
+            <tr><td>Loor Bravo, Maryu...</td><td>451</td><td>30.0 hrs/week</td><td class="status-high">🔴 HIGH RISK</td></tr>
+            <tr><td>Alejo De Rodrigue...</td><td>645</td><td>31.0 hrs/week</td><td class="status-high">🔴 HIGH RISK</td></tr>
+            <tr><td>Patino, Ana L</td><td>554</td><td>38.4+ hrs/week</td><td class="status-high">🔴 HIGH RISK</td></tr>
+            <tr><td>Rodrigues, Vanild...</td><td>160</td><td>38.7 hrs/week</td><td class="status-high">🔴 HIGH RISK</td></tr>
+            <tr><td colspan="4"><strong>Total: 8 Part-Time Employees Working 29.5+ hrs/week EVERY Period</strong></td></tr>
+        </table>
+
+        <div class="alert-box alert-critical">
+            <strong>⚠️ REDUCED RISK (from 12 to 8 employees)</strong> after classification update removing Francisco Marte, Mallqui, Jose Morfe, and Ariel Vargas as full-time.
+            <br><br>
+            <strong>However, 8 part-time employees are still working 30+ hrs/week across all 4 periods.</strong>
+            <br><br>
+            <strong>Action Required:</strong>
+            <ul style="margin-left: 20px; margin-top: 8px;">
+                <li>Verify employment classification for these 9 PT employees</li>
+                <li>Calculate 3-month ACA lookback period</li>
+                <li>Either reduce hours below 29.5/week OR reclassify as full-time</li>
+                <li>Consult HR/Legal on retroactive benefit liability</li>
+            </ul>
+        </div>
+
+        <h2>FULL-TIME EMPLOYEES CONFIRMED (No ACA Risk)</h2>
+        <table>
+            <tr><th>Employee Name</th><th>ID</th><th>Avg Hours/Period</th><th>Status</th></tr>
+            <tr><td>Francisco Marte</td><td>667</td><td>~76 hrs/period</td><td class="status-ok">✓ FULL-TIME</td></tr>
+            <tr><td>Mallqui Ccapcha</td><td>681</td><td>~76 hrs/period</td><td class="status-ok">✓ FULL-TIME</td></tr>
+            <tr><td>Jose Morfe Guzman</td><td>702</td><td>~76 hrs/period</td><td class="status-ok">✓ FULL-TIME</td></tr>
+            <tr><td>Ariel Vargas</td><td>459</td><td>~70 hrs/period</td><td class="status-ok">✓ FULL-TIME</td></tr>
+            <tr><td colspan="4"><strong>These 4 employees are classified as full-time and do not trigger ACA thresholds.</strong></td></tr>
+        </table>
+
+        <h2>COMPLETE PAYROLL DATA VERIFICATION</h2>
+        <table>
+            <tr><th>Period</th><th>Persons</th><th>Total Hours</th><th>Total Wages</th><th>Status</th></tr>
+            <tr><td>Period 1 (01/03-01/16)</td><td>77</td><td>4,739.20</td><td>$91,381.28</td><td class="status-ok">✓ VERIFIED</td></tr>
+            <tr><td>Period 2 (01/17-01/30)</td><td>76</td><td>4,647.50</td><td>$89,952.84</td><td class="status-ok">✓ VERIFIED</td></tr>
+            <tr><td>Period 3 (01/31-02/13)</td><td>76</td><td>4,580.50</td><td>$90,035.35</td><td class="status-ok">✓ VERIFIED</td></tr>
+            <tr><td>Period 4 (02/14-02/27)</td><td>75</td><td>4,370.60</td><td>$85,328.83</td><td class="status-ok">✓ VERIFIED</td></tr>
+            <tr><td><strong>YTD TOTAL</strong></td><td><strong>75-77</strong></td><td><strong>18,337.80</strong></td><td><strong>$356,698.30</strong></td><td class="status-ok"><strong>✓ CLEAN</strong></td></tr>
+        </table>
+
+        <h2>FINAL AUDIT CONCLUSION</h2>
+        <div class="alert-box alert-success">
+            <strong>Overall Status: ✅ PASS — Payroll Data is Accurate</strong>
+            <br><br>
+            <strong>✅ VERIFIED:</strong>
+            <ul style="margin-left: 20px;">
+                <li>All 4 payroll periods match Paychex source documents exactly</li>
+                <li>Wage calculations accurate (hours × rates)</li>
+                <li>No duplicate transactions</li>
+                <li>Vacation pay properly accounted for: $8,125 total</li>
+                <li>Headcount reduction (77→75) explained by 2 employee separations</li>
+                <li>Total YTD wages: $356,698.30 across 18,337.80 hours</li>
+            </ul>
+            <strong>⚠️ COMPLIANCE ISSUE (Non-Payroll):</strong>
+            <ul style="margin-left: 20px;">
+                <li>8 part-time employees working 29.5+ hrs/week consistently</li>
+                <li>May trigger ACA healthcare benefit obligations</li>
+                <li><strong>Recommendation:</strong> Verify PT/FT classification and consult HR/Legal</li>
+            </ul>
+        </div>
+
+        <h2>SUMMARY METRICS</h2>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0;">
+            <div style="background: #d4edda; padding: 15px; border-radius: 5px; border: 1px solid #28a745;">
+                <div style="font-size: 10px; color: #155724; text-transform: uppercase; letter-spacing: 0.5px;">Total Hours Processed</div>
+                <div style="font-size: 22px; font-weight: 700; color: #155724; margin-top: 5px;">18,337.80</div>
+                <div style="font-size: 9px; color: #155724; margin-top: 3px;">All 4 periods verified</div>
+            </div>
+            <div style="background: #d4edda; padding: 15px; border-radius: 5px; border: 1px solid #28a745;">
+                <div style="font-size: 10px; color: #155724; text-transform: uppercase; letter-spacing: 0.5px;">Total Wages Paid</div>
+                <div style="font-size: 22px; font-weight: 700; color: #155724; margin-top: 5px;">$356,698.30</div>
+                <div style="font-size: 9px; color: #155724; margin-top: 3px;">Average: $89,174.58/period</div>
+            </div>
+            <div style="background: #d4edda; padding: 15px; border-radius: 5px; border: 1px solid #28a745;">
+                <div style="font-size: 10px; color: #155724; text-transform: uppercase; letter-spacing: 0.5px;">Employees Paid</div>
+                <div style="font-size: 22px; font-weight: 700; color: #155724; margin-top: 5px;">75-77</div>
+                <div style="font-size: 9px; color: #155724; margin-top: 3px;">Peak: 77 (P1), Final: 75 (P4)</div>
+            </div>
+            <div style="background: #d4edda; padding: 15px; border-radius: 5px; border: 1px solid #28a745;">
+                <div style="font-size: 10px; color: #155724; text-transform: uppercase; letter-spacing: 0.5px;">Payroll Status</div>
+                <div style="font-size: 22px; font-weight: 700; color: #155724; margin-top: 5px;">✓ CLEAN</div>
+                <div style="font-size: 9px; color: #155724; margin-top: 3px;">All data verified vs Paychex</div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p><strong>Final Payroll Audit Report</strong> | Preferred Maintenance Inc | Generated: March 7, 2026 at 11:15 AM EST</p>
+            <p>Classification Update: Francisco Marte, Mallqui, Jose Morfe, Ariel Vargas confirmed as FULL-TIME</p>
+            <p>Audit verified against Paychex source documents (January 3 - February 27, 2026)</p>
+        </div>
+    </div>
+</body>
+</html>
