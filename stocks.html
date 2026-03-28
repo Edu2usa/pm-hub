@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Stock Screener — Preferred Maintenance</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{colors:{navy:{900:'#0B1120',800:'#0F172A',700:'#1E293B'}}}}}</script>
+  <style>
+    body{background:linear-gradient(135deg,#0B1120 0%,#1E293B 100%)}
+    .card{background:linear-gradient(145deg,rgba(59,130,246,.08),rgba(14,165,233,.05));border:1px solid rgba(59,130,246,.2)}
+    .card:hover{border-color:rgba(59,130,246,.6);transform:translateY(-2px);box-shadow:0 12px 30px rgba(37,99,235,.12)}
+    .btn-primary{background:linear-gradient(135deg,#3B82F6,#0EA5E9)}
+    .btn-primary:hover{background:linear-gradient(135deg,#2563EB,#0284C7)}
+    .status-dot{animation:pulse 2s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+    .spinner{border:3px solid rgba(59,130,246,.2);border-top-color:#3B82F6;border-radius:50%;width:32px;height:32px;animation:spin .8s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+  </style>
+</head>
+<body class="min-h-screen text-gray-100 font-sans">
+  <header class="border-b border-blue-900/40 bg-navy-900/60 backdrop-blur-sm sticky top-0 z-10">
+    <div class="max-w-5xl mx-auto px-6 py-4 flex items-center gap-3">
+      <span class="text-3xl">📊</span>
+      <div><h1 class="text-xl font-bold">Stock Screener</h1><p class="text-xs text-blue-400">Munger-Style Value Investing</p></div>
+      <div class="ml-auto flex items-center gap-2 text-xs">
+        <span class="status-dot w-2 h-2 rounded-full bg-green-400 inline-block"></span>
+        <span class="text-gray-400" id="status">Ready</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-6 py-10">
+    <!-- Lookup -->
+    <div class="card rounded-xl p-6 mb-8">
+      <h2 class="text-lg font-semibold mb-4 flex items-center gap-2">🔍 <span>Ticker Lookup</span></h2>
+      <div class="flex gap-3 flex-wrap">
+        <input id="ticker" type="text" placeholder="AAPL, MSFT, UUUU..." value="UUUU"
+          class="flex-1 min-w-32 bg-navy-800 border border-blue-700/50 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 font-mono text-lg"/>
+        <select id="market" class="bg-navy-800 border border-blue-700/50 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500">
+          <option value="US">🇺🇸 US (S&P 500)</option>
+          <option value="TH">🇹🇭 Thailand (SET)</option>
+        </select>
+        <button onclick="lookupTicker()" class="btn-primary text-white font-semibold px-6 py-3 rounded-lg">Analyze</button>
+      </div>
+      <div id="result" class="mt-5 hidden"></div>
+      <div id="loading" class="mt-5 hidden flex items-center gap-3">
+        <div class="spinner"></div><span class="text-gray-400">Fetching data...</span>
+      </div>
+    </div>
+
+    <!-- Munger Signals -->
+    <div class="card rounded-xl p-6 mb-8">
+      <h2 class="text-lg font-semibold mb-4 flex items-center gap-2">🎯 <span>Williams %R Oversold Signals</span></h2>
+      <p class="text-gray-400 text-sm mb-4">Stocks with Williams %R below -80 — potential value opportunities</p>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="text-blue-400 text-left border-b border-blue-900/40">
+              <th class="pb-2 pr-4">Ticker</th>
+              <th class="pb-2 pr-4">Name</th>
+              <th class="pb-2 pr-4 text-right">Price</th>
+              <th class="pb-2 pr-4 text-right">%R</th>
+              <th class="pb-2 pr-4 text-right">RSI</th>
+              <th class="pb-2 text-right">Signal</th>
+            </tr>
+          </thead>
+          <tbody id="oversoldTable" class="text-gray-300">
+            <tr><td colspan="6" class="py-4 text-center text-gray-500">Click "Analyze" on a ticker to add to list</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Saved Reports -->
+    <div class="card rounded-xl p-6">
+      <h2 class="text-lg font-semibold mb-4 flex items-center gap-2">📁 <span>Saved Analysis</span></h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <a href="../stock-o-analysis.html" target="_blank" class="block bg-navy-800/60 border border-blue-900/40 rounded-lg p-4 hover:border-blue-500 transition-colors">
+          <div class="text-white font-medium">UUUU / USAR Analysis</div>
+          <div class="text-xs text-gray-400 mt-1">📅 Mar 2026</div>
+        </a>
+        <a href="../stock_analysis.html" target="_blank" class="block bg-navy-800/60 border border-blue-900/40 rounded-lg p-4 hover:border-blue-500 transition-colors">
+          <div class="text-white font-medium">Stock Analysis</div>
+          <div class="text-xs text-gray-400 mt-1">📅 Recent</div>
+        </a>
+        <a href="../watchlist_summary.pdf" target="_blank" class="block bg-navy-800/60 border border-blue-900/40 rounded-lg p-4 hover:border-blue-500 transition-colors">
+          <div class="text-white font-medium">Watchlist Summary</div>
+          <div class="text-xs text-gray-400 mt-1">📄 PDF</div>
+        </a>
+        <a href="../reports/stock_analysis.txt" target="_blank" class="block bg-navy-800/60 border border-blue-900/40 rounded-lg p-4 hover:border-blue-500 transition-colors">
+          <div class="text-white font-medium">Analysis Report</div>
+          <div class="text-xs text-gray-400 mt-1">📄 TXT</div>
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const oversold = [];
+    const marketNames = {US:['Apple','Microsoft','Meta','Google','Amazon','Netflix','NVDA','AMD','Intel','Disney'],TH:['SCB','KBANK','PTT','TRUE','ADVANC','BDMS']};
+    const thTickers=['SCB','KBANK','PTT','TRUE','ADVANC','BDMS','CPALL','GULF','BGRIM','SCC'];
+
+    async function lookupTicker() {
+      const t = document.getElementById('ticker').value.trim().toUpperCase();
+      const market = document.getElementById('market').value;
+      if(!t) return;
+      document.getElementById('result').classList.add('hidden');
+      document.getElementById('loading').classList.remove('hidden');
+      document.getElementById('status').textContent = 'Fetching...';
+      try {
+        // Try Yahoo Finance
+        const r = await fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${t}?interval=1d&range=3mo`);
+        const d = await r.json();
+        document.getElementById('loading').classList.add('hidden');
+        document.getElementById('status').textContent = 'Ready';
+        if(d.chart?.result) {
+          const q = d.chart.result[0];
+          const meta = q.meta;
+          const closes = q.indicators.quote[0].close.filter(Boolean);
+          const highs = q.indicators.quote[0].high.filter(Boolean);
+          const lows = q.indicators.quote[0].low.filter(Boolean);
+          const rsi = calcRSI(closes, 14);
+          const willr = calcWilliamsR(highs, lows, closes);
+          const sig = willr < -80 ? '🟢 Oversold' : willr < -50 ? '🟡 Neutral' : '🔴 Overbought';
+          const color = willr < -80 ? 'text-green-400' : willr < -50 ? 'text-yellow-400' : 'text-red-400';
+          document.getElementById('result').innerHTML = `
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+              <div><div class="text-xs text-gray-500">Price</div><div class="text-xl font-bold text-white">$${meta.regularMarketPrice?.toFixed(2)}</div></div>
+              <div><div class="text-xs text-gray-500">Williams %R</div><div class="text-xl font-bold ${color}">${willr.toFixed(1)}</div></div>
+              <div><div class="text-xs text-gray-500">RSI(14)</div><div class="text-xl font-bold ${rsi>70?'text-red-400':rsi<30?'text-green-400':'text-yellow-400'}">${rsi.toFixed(1)}</div></div>
+              <div><div class="text-xs text-gray-500">Signal</div><div class="text-xl font-bold ${color}">${sig}</div></div>
+            </div>`;
+          document.getElementById('result').classList.remove('hidden');
+          // Add to table
+          const row = `<tr class="border-b border-blue-900/20">
+            <td class="py-2 pr-4 font-mono font-bold text-blue-400">${t}</td>
+            <td class="py-2 pr-4">${meta.shortName||meta.symbol}</td>
+            <td class="py-2 pr-4 text-right">$${meta.regularMarketPrice?.toFixed(2)}</td>
+            <td class="py-2 pr-4 text-right font-bold ${color}">${willr.toFixed(1)}</td>
+            <td class="py-2 pr-4 text-right">${rsi.toFixed(1)}</td>
+            <td class="py-2 text-right ${color}">${sig}</td></tr>`;
+          const existing = document.querySelector(`#oversoldTable tr td:first-child`)?.textContent;
+          if(existing === t) document.querySelector(`#oversoldTable tr:first-child`)?.remove();
+          document.getElementById('oversoldTable').insertAdjacentHTML('afterbegin',row);
+        } else {
+          document.getElementById('result').innerHTML=`<div class="text-red-400">Ticker "${t}" not found. Try US tickers like AAPL, MSFT, UUUU.</div>`;
+          document.getElementById('result').classList.remove('hidden');
+        }
+      } catch(e) {
+        document.getElementById('loading').classList.add('hidden');
+        document.getElementById('status').textContent = 'Error';
+        document.getElementById('result').innerHTML=`<div class="text-red-400">Error: ${e.message}</div>`;
+        document.getElementById('result').classList.remove('hidden');
+      }
+    }
+
+    function calcRSI(closes, period=14) {
+      if(closes.length < period+1) return 50;
+      let gains=0,losses=0;
+      for(let i=closes.length-period;i<closes.length;i++){
+        const diff=closes[i]-closes[i-1];
+        if(diff>0)gains+=diff;else losses-=diff;
+      }
+      const avgGain=gains/period,avgLoss=losses/period;
+      if(avgLoss===0)return 100;
+      const rs=avgGain/avgLoss;
+      return 100-(100/(1+rs));
+    }
+    function calcWilliamsR(highs,lows,closes) {
+      const n=14;
+      const hi=Math.max(...highs.slice(-n));
+      const lo=Math.min(...lows.slice(-n));
+      const last=closes[closes.length-1];
+      if(hi===lo)return -50;
+      return ((hi-last)/(hi-lo))*(-100);
+    }
+
+    document.getElementById('ticker').addEventListener('keydown',e=>{if(e.key==='Enter')lookupTicker()});
+  </script>
+</body>
+</html>
