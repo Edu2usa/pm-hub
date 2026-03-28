@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Payroll Reports — Preferred Maintenance</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{colors:{navy:{900:'#0B1120',800:'#0F172A',700:'#1E293B'}}}}}</script>
+  <style>body{background:linear-gradient(135deg,#0B1120 0%,#1E293B 100%)}
+    .card{background:linear-gradient(145deg,rgba(59,130,246,.08),rgba(14,165,233,.05));border:1px solid rgba(59,130,246,.2)}
+    .card:hover{border-color:rgba(59,130,246,.6);transform:translateY(-2px);box-shadow:0 12px 30px rgba(37,99,235,.12)}
+  </style>
+</head>
+<body class="min-h-screen text-gray-100 font-sans">
+  <header class="border-b border-blue-900/40 bg-navy-900/60 backdrop-blur-sm sticky top-0 z-10">
+    <div class="max-w-5xl mx-auto px-6 py-4 flex items-center gap-3">
+      <span class="text-3xl">📊</span>
+      <div><h1 class="text-xl font-bold">Payroll Reports</h1><p class="text-xs text-blue-400">Preferred Maintenance Inc</p></div>
+      <div class="ml-auto text-xs text-gray-400">📅 Biweekly</div>
+    </div>
+  </header>
+  <main class="max-w-5xl mx-auto px-6 py-10">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="card rounded-xl p-6 cursor-pointer" onclick="location.href='../payroll_comprehensive_final.html'">
+        <div class="flex items-start gap-4">
+          <span class="text-3xl">📋</span>
+          <div>
+            <h3 class="text-white font-semibold">Comprehensive Report</h3>
+            <p class="text-xs text-blue-400 mb-3">Mar 15, 2026</p>
+            <p class="text-gray-400 text-sm">Full payroll breakdown — Regular vs OT, FT/PT classification, ACA compliance flags.</p>
+          </div>
+        </div>
+        <div class="mt-4 bg-blue-600 text-white text-sm font-semibold py-2 px-4 rounded-lg text-center">View Report →</div>
+      </div>
+      <div class="card rounded-xl p-6 cursor-pointer" onclick="location.href='../payroll_executive_report_final.html'">
+        <div class="flex items-start gap-4">
+          <span class="text-3xl">📈</span>
+          <div>
+            <h3 class="text-white font-semibold">Executive Summary</h3>
+            <p class="text-xs text-blue-400 mb-3">Mar 15, 2026</p>
+            <p class="text-gray-400 text-sm">Key metrics, variance analysis, and decision-ready payroll summary.</p>
+          </div>
+        </div>
+        <div class="mt-4 bg-blue-600 text-white text-sm font-semibold py-2 px-4 rounded-lg text-center">View Report →</div>
+      </div>
+      <div class="card rounded-xl p-6 cursor-pointer" onclick="location.href='../payroll_comparison_report.html'">
+        <div class="flex items-start gap-4">
+          <span class="text-3xl">🔄</span>
+          <div>
+            <h3 class="text-white font-semibold">Comparison Report</h3>
+            <p class="text-xs text-blue-400 mb-3">Mar 26, 2026</p>
+            <p class="text-gray-400 text-sm">Period-over-period payroll comparison with variance tracking.</p>
+          </div>
+        </div>
+        <div class="mt-4 bg-blue-600 text-white text-sm font-semibold py-2 px-4 rounded-lg text-center">View Report →</div>
+      </div>
+      <div class="card rounded-xl p-6 cursor-pointer" onclick="location.href='../aca_mitigation_final.html'">
+        <div class="flex items-start gap-4">
+          <span class="text-3xl">🛡️</span>
+          <div>
+            <h3 class="text-white font-semibold">ACA Mitigation</h3>
+            <p class="text-xs text-blue-400 mb-3">Mar 15, 2026</p>
+            <p class="text-gray-400 text-sm">Full-time hour tracking and 30hr/week threshold compliance.</p>
+          </div>
+        </div>
+        <div class="mt-4 bg-blue-600 text-white text-sm font-semibold py-2 px-4 rounded-lg text-center">View Report →</div>
+      </div>
+      <div class="card rounded-xl p-6 cursor-pointer" onclick="location.href='../agent_board_report_week_of_mar15.html'">
+        <div class="flex items-start gap-4">
+          <span class="text-3xl">🤖</span>
+          <div>
+            <h3 class="text-white font-semibold">Agent Board Report</h3>
+            <p class="text-xs text-blue-400 mb-3">Week of Mar 15</p>
+            <p class="text-gray-400 text-sm">Agent performance tracking and task allocation analysis.</p>
+          </div>
+        </div>
+        <div class="mt-4 bg-blue-600 text-white text-sm font-semibold py-2 px-4 rounded-lg text-center">View Report →</div>
+      </div>
+      <div class="card rounded-xl p-6 cursor-pointer" onclick="location.href='../payroll_audit_final.html'">
+        <div class="flex items-start gap-4">
+          <span class="text-3xl">🔍</span>
+          <div>
+            <h3 class="text-white font-semibold">Audit Report</h3>
+            <p class="text-xs text-blue-400 mb-3">Mar 7, 2026</p>
+            <p class="text-gray-400 text-sm">Detailed payroll audit with PT/OT verification and compliance checks.</p>
+          </div>
+        </div>
+        <div class="mt-4 bg-blue-600 text-white text-sm font-semibold py-2 px-4 rounded-lg text-center">View Report →</div>
+      </div>
+    </div>
+  </main>
+</body>
+</html>
