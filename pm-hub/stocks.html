@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Stock Screener — Preferred Maintenance</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{colors:{navy:{900:'#0B1120',800:'#0F172A',700:'#1E293B',600:'#334155'},accent:{400:'#60A5FA',500:'#3B82F6',600:'#2563EB'}}}}}</script>
+  <style>
+    body{background:linear-gradient(135deg,#0B1120 0%,#1E293B 100%);min-height:100vh}
+    .card{background:linear-gradient(145deg,rgba(59,130,246,.08),rgba(14,165,233,.05));border:1px solid rgba(59,130,246,.2)}
+    .card:hover{border-color:rgba(59,130,246,.6);transform:translateY(-2px);box-shadow:0 12px 30px rgba(37,99,235,.12)}
+    .btn-primary{background:linear-gradient(135deg,#3B82F6,#0EA5E9)}
+    .btn-primary:hover{background:linear-gradient(135deg,#2563EB,#0284C7)}
+    .btn-success{background:linear-gradient(135deg,#10B981,#059669)}
+    .btn-success:hover{background:linear-gradient(135deg,#059669,#047857)}
+    .btn-danger{background:linear-gradient(135deg,#EF4444,#DC2626)}
+    .btn-danger:hover{background:linear-gradient(135deg,#DC2626,#B91C1C)}
+    .status-dot{animation:pulse 2s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+    .spinner{border:3px solid rgba(59,130,246,.2);border-top-color:#3B82F6;border-radius:50%;width:32px;height:32px;animation:spin .8s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .tab-active{border-bottom:3px solid #3B82F6;color:#60A5FA}
+    .tab-btn{transition:all .2s}
+    .tab-btn:hover{color:#93C5FD}
+  </style>
+</head>
+<body class="text-gray-100 font-sans">
+  <!-- Header -->
+  <header class="border-b border-blue-900/40 bg-navy-900/60 backdrop-blur-sm sticky top-0 z-20">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center gap-3">
+      <span class="text-3xl">📊</span>
+      <div><h1 class="text-xl font-bold">Stock Screener</h1><p class="text-xs text-blue-400">Munger-Style Value Investing</p></div>
+      <div class="ml-auto flex items-center gap-2 text-xs">
+        <span class="status-dot w-2 h-2 rounded-full bg-green-400 inline-block"></span>
+        <span class="text-gray-400" id="status">Ready</span>
+      </div>
+    </div>
+    <!-- Tabs -->
+    <div class="max-w-6xl mx-auto px-6 flex gap-1">
+      <button onclick="switchTab('oversold')" id="tab-oversold" class="tab-btn tab-active px-5 py-3 text-sm font-medium">🎯 Oversold</button>
+      <button onclick="switchTab('analyze')" id="tab-analyze" class="tab-btn px-5 py-3 text-sm font-medium text-gray-400">🔍 Analyze</button>
+      <button onclick="switchTab('howto')" id="tab-howto" class="tab-btn px-5 py-3 text-sm font-medium text-gray-400">📖 How to Use</button>
+      <button onclick="switchTab('watchlist')" id="tab-watchlist" class="tab-btn px-5 py-3 text-sm font-medium text-gray-400">⭐ Watchlist <span id="watchlist-count" class="bg-blue-600 text-white text-xs px-1.5 py-0.5 rounded-full ml-1">0</span></button>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-6 py-8">
+    
+    <!-- ===== OVERSOLD TAB ===== -->
+    <div id="panel-oversold" class="tab-panel">
+      <div class="card rounded-xl p-6 mb-6">
+        <h2 class="text-lg font-semibold mb-2 flex items-center gap-2">🎯 Williams %R Oversold Signals</h2>
+        <p class="text-gray-400 text-sm mb-4">Stocks with Williams %R below -80 = potential value opportunities</p>
+        
+        <!-- Pre-built Scans -->
+        <div class="flex flex-wrap gap-2 mb-6">
+          <button onclick="runScan('sp500')" class="btn-primary text-white text-sm px-4 py-2 rounded-lg">📈 Scan S&P 500</button>
+          <button onclick="runScan('popular')" class="bg-navy-700 border border-blue-700/50 text-white text-sm px-4 py-2 rounded-lg hover:border-blue-500">🔥 Popular Stocks</button>
+          <button onclick="runScan('tech')" class="bg-navy-700 border border-blue-700/50 text-white text-sm px-4 py-2 rounded-lg hover:border-blue-500">💻 Tech Giants</button>
+          <button onclick="runScan('clear')" class="bg-navy-700 border border-gray-600/50 text-gray-300 text-sm px-4 py-2 rounded-lg hover:border-gray-500">🗑️ Clear Results</button>
+        </div>
+
+        <div id="oversold-loading" class="hidden flex items-center gap-3 py-8">
+          <div class="spinner"></div><span class="text-gray-400">Analyzing stocks...</span>
+        </div>
+        
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="text-blue-400 text-left border-b border-blue-900/40">
+                <th class="pb-3 pr-4">Ticker</th>
+                <th class="pb-3 pr-4">Name</th>
+                <th class="pb-3 pr-4 text-right">Price</th>
+                <th class="pb-3 pr-4 text-right">%R</th>
+                <th class="pb-3 pr-4 text-right">RSI</th>
+                <th class="pb-3 pr-4 text-center">Signal</th>
+                <th class="pb-3 text-center">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="oversoldTable" class="text-gray-300">
+              <tr><td colspan="7" class="py-8 text-center text-gray-500">
+                <div class="text-4xl mb-2">📊</div>
+                Click a scan button above to find oversold stocks
+              </td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== ANALYZE TAB ===== -->
+    <div id="panel-analyze" class="tab-panel hidden">
+      <div class="card rounded-xl p-6 mb-6">
+        <h2 class="text-lg font-semibold mb-4 flex items-center gap-2">🔍 Ticker Lookup & Analysis</h2>
+        <div class="flex gap-3 flex-wrap">
+          <input id="ticker-input" type="text" placeholder="AAPL, MSFT, UUUU..." 
+            class="flex-1 min-w-48 bg-navy-800 border border-blue-700/50 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 font-mono text-lg"/>
+          <select id="market-select" class="bg-navy-800 border border-blue-700/50 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500">
+            <option value="US">🇺🇸 US (S&P 500)</option>
+            <option value="TH">🇹🇭 Thailand (SET)</option>
+          </select>
+          <button onclick="lookupTicker()" class="btn-primary text-white font-semibold px-6 py-3 rounded-lg">Analyze</button>
+        </div>
+        <div id="result-loading" class="mt-5 hidden flex items-center gap-3">
+          <div class="spinner"></div><span class="text-gray-400">Fetching data...</span>
+        </div>
+        <div id="analyze-result" class="mt-5 hidden"></div>
+      </div>
+      
+      <!-- Quick Add to Watchlist -->
+      <div class="card rounded-xl p-6">
+        <h3 class="font-semibold mb-3 flex items-center gap-2">➕ Quick Add to Watchlist</h3>
+        <div class="flex gap-3 flex-wrap">
+          <input id="quick-ticker" type="text" placeholder="Ticker symbol..." 
+            class="flex-1 min-w-32 bg-navy-800 border border-blue-700/50 rounded-lg px-4 py-2 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 font-mono uppercase"/>
+          <button onclick="quickAddWatchlist()" class="btn-success text-white font-semibold px-4 py-2 rounded-lg">Add ⭐</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== HOW TO USE TAB ===== -->
+    <div id="panel-howto" class="tab-panel hidden">
+      <div class="card rounded-xl p-6 mb-6">
+        <h2 class="text-xl font-bold mb-6 flex items-center gap-2">📖 How to Use the Stock Screener</h2>
+        
+        <div class="space-y-6">
+          <!-- What is Williams %R -->
+          <div class="bg-navy-800/60 rounded-lg p-5 border border-blue-900/40">
+            <h3 class="text-blue-400 font-semibold mb-3">🎯 What is Williams %R?</h3>
+            <p class="text-gray-300 text-sm leading-relaxed mb-3">
+              Williams %R (Williams Percent Range) measures overbought/oversold conditions on a -100 to 0 scale.
+            </p>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-4">
+              <div class="bg-green-900/30 border border-green-700/40 rounded-lg p-3 text-center">
+                <div class="text-green-400 font-bold text-lg">-80 to -100</div>
+                <div class="text-gray-400 text-xs mt-1">🟢 Oversold — BUY ZONE</div>
+              </div>
+              <div class="bg-yellow-900/30 border border-yellow-700/40 rounded-lg p-3 text-center">
+                <div class="text-yellow-400 font-bold text-lg">-50 to -80</div>
+                <div class="text-gray-400 text-xs mt-1">🟡 Neutral Zone</div>
+              </div>
+              <div class="bg-red-900/30 border border-red-700/40 rounded-lg p-3 text-center">
+                <div class="text-red-400 font-bold text-lg">0 to -50</div>
+                <div class="text-gray-400 text-xs mt-1">🔴 Overbought — SELL ZONE</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- RSI Explanation -->
+          <div class="bg-navy-800/60 rounded-lg p-5 border border-blue-900/40">
+            <h3 class="text-blue-400 font-semibold mb-3">📊 What is RSI?</h3>
+            <p class="text-gray-300 text-sm leading-relaxed mb-3">
+              Relative Strength Index (RSI) measures price momentum on a 0-100 scale. Traditional thresholds:
+            </p>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-4">
+              <div class="bg-green-900/30 border border-green-700/40 rounded-lg p-3 text-center">
+                <div class="text-green-400 font-bold text-lg">Below 30</div>
+                <div class="text-gray-400 text-xs mt-1">🟢 Oversold</div>
+              </div>
+              <div class="bg-yellow-900/30 border border-yellow-700/40 rounded-lg p-3 text-center">
+                <div class="text-yellow-400 font-bold text-lg">30–70</div>
+                <div class="text-gray-400 text-xs mt-1">🟡 Neutral</div>
+              </div>
+              <div class="bg-red-900/30 border border-red-700/40 rounded-lg p-3 text-center">
+                <div class="text-red-400 font-bold text-lg">Above 70</div>
+                <div class="text-gray-400 text-xs mt-1">🔴 Overbought</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- How to Use Each Tab -->
+          <div class="bg-navy-800/60 rounded-lg p-5 border border-blue-900/40">
+            <h3 class="text-blue-400 font-semibold mb-3">🗂️ How to Use Each Tab</h3>
+            <div class="space-y-3 text-sm">
+              <div class="flex gap-3 items-start">
+                <span class="text-xl">🎯</span>
+                <div><strong class="text-white">Oversold Tab:</strong> <span class="text-gray-400">Run pre-built scans to find stocks in the buy zone. Click "⭐ Save" to add them to your watchlist.</span></div>
+              </div>
+              <div class="flex gap-3 items-start">
+                <span class="text-xl">🔍</span>
+                <div><strong class="text-white">Analyze Tab:</strong> <span class="text-gray-400">Enter any ticker symbol to get detailed Williams %R and RSI analysis. Save results to your watchlist.</span></div>
+              </div>
+              <div class="flex gap-3 items-start">
+                <span class="text-xl">⭐</span>
+                <div><strong class="text-white">Watchlist Tab:</strong> <span class="text-gray-400">View all your saved stocks. Click "Refresh" to update prices, or "Remove" to delete.</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Munger Strategy -->
+          <div class="bg-navy-800/60 rounded-lg p-5 border border-blue-900/40">
+            <h3 class="text-blue-400 font-semibold mb-3">💡 Munger-Style Value Strategy</h3>
+            <p class="text-gray-300 text-sm leading-relaxed mb-3">
+              Charlie Munger and Warren Buffett look for "margin of safety" — buying quality assets when they're on sale.
+            </p>
+            <ul class="text-gray-400 text-sm space-y-2 ml-4">
+              <li>• <span class="text-green-400">Oversold</span> doesn't always mean "buy now" — check fundamentals</li>
+              <li>• Look for stocks that are historically oversold but have strong underlying business</li>
+              <li>• Dollar-cost average into positions over time, not all at once</li>
+              <li>• Combine with your own research — this is a screening tool, not financial advice</li>
+            </ul>
+          </div>
+
+          <!-- Limitations -->
+          <div class="bg-red-900/20 rounded-lg p-5 border border-red-800/40">
+            <h3 class="text-red-400 font-semibold mb-3">⚠️ Important Limitations</h3>
+            <ul class="text-gray-400 text-sm space-y-2">
+              <li>• Technical indicators are <strong class="text-white">lagging</strong> — they tell you what happened, not what will happen</li>
+              <li>• Williams %R can stay oversold/overbought for extended periods in strong trends</li>
+              <li>• This tool uses free Yahoo Finance data — may have 15-20 min delays</li>
+              <li>• <strong class="text-yellow-400">Not financial advice.</strong> Always do your own due diligence.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== WATCHLIST TAB ===== -->
+    <div id="panel-watchlist" class="tab-panel hidden">
+      <div class="card rounded-xl p-6 mb-6">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-lg font-semibold flex items-center gap-2">⭐ Your Watchlist</h2>
+          <div class="flex gap-2">
+            <button onclick="refreshWatchlist()" class="btn-primary text-white text-sm px-4 py-2 rounded-lg">🔄 Refresh All</button>
+            <button onclick="exportWatchlist()" class="bg-navy-700 border border-blue-700/50 text-white text-sm px-4 py-2 rounded-lg hover:border-blue-500">📤 Export</button>
+            <button onclick="clearWatchlist()" class="btn-danger text-white text-sm px-4 py-2 rounded-lg">🗑️ Clear All</button>
+          </div>
+        </div>
+        <p class="text-gray-400 text-sm mb-4">Your saved stocks — click refresh to update prices</p>
+        
+        <div id="watchlist-loading" class="hidden flex items-center gap-3 py-4">
+          <div class="spinner"></div><span class="text-gray-400">Updating prices...</span>
+        </div>
+        
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="text-blue-400 text-left border-b border-blue-900/40">
+                <th class="pb-3 pr-4">Ticker</th>
+                <th class="pb-3 pr-4">Name</th>
+                <th class="pb-3 pr-4 text-right">Price</th>
+                <th class="pb-3 pr-4 text-right">%R</th>
+                <th class="pb-3 pr-4 text-right">RSI</th>
+                <th class="pb-3 pr-4 text-center">Signal</th>
+                <th class="pb-3 pr-4 text-center">Added</th>
+                <th class="pb-3 text-center">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="watchlistTable" class="text-gray-300">
+              <tr><td colspan="8" class="py-8 text-center text-gray-500">
+                <div class="text-4xl mb-2">⭐</div>
+                Your watchlist is empty. Save stocks from the Oversold or Analyze tabs!
+              </td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // ===== STATE =====
+    let watchlist = JSON.parse(localStorage.getItem('pm_watchlist') || '[]');
+    const STOCK_SETS = {
+      popular: ['AAPL','MSFT','GOOGL','AMZN','META','NVDA','TSLA','AMD','INTC','COIN','GME','AMC','NIO','PLTR','ARM'],
+      tech: ['AAPL','MSFT','GOOGL','AMZN','META','NVDA','TSLA','AMD','INTC','QCOM','AVGO','ORCL','CRM','ADBE','NFLX'],
+      sp500: ['MSFT','AAPL','NVDA','AMZN','META','GOOGL','GOOG','BRK.B','LLY','AVGO','JPM','XOM','UNH','V','JNJ']
+    };
+
+    // ===== INIT =====
+    document.addEventListener('DOMContentLoaded', () => {
+      updateWatchlistCount();
+      renderWatchlist();
+      document.getElementById('ticker-input').addEventListener('keydown', e => { if(e.key==='Enter') lookupTicker(); });
+    });
+
+    // ===== TABS =====
+    function switchTab(tab) {
+      ['oversold','analyze','howto','watchlist'].forEach(t => {
+        document.getElementById(`tab-${t}`).classList.remove('tab-active');
+        document.getElementById(`tab-${t}`).classList.add('text-gray-400');
+        document.getElementById(`panel-${t}`).classList.add('hidden');
+      });
+      document.getElementById(`tab-${tab}`).classList.add('tab-active');
+      document.getElementById(`tab-${tab}`).classList.remove('text-gray-400');
+      document.getElementById(`panel-${tab}`).classList.remove('hidden');
+    }
+
+    // ===== WATCHLIST =====
+    function updateWatchlistCount() {
+      document.getElementById('watchlist-count').textContent = watchlist.length;
+    }
+
+    function saveWatchlist() {
+      localStorage.setItem('pm_watchlist', JSON.stringify(watchlist));
+      updateWatchlistCount();
+    }
+
+    function addToWatchlist(ticker, name, price, willr, rsi, signal) {
+      if (watchlist.some(s => s.ticker === ticker)) {
+        return { ok: false, msg: `${ticker} already in watchlist` };
+      }
+      watchlist.unshift({ ticker, name, price, willr, rsi, signal, added: new Date().toISOString().split('T')[0] });
+      saveWatchlist();
+      renderWatchlist();
+      return { ok: true, msg: `${ticker} added to watchlist` };
+    }
+
+    function removeFromWatchlist(ticker) {
+      watchlist = watchlist.filter(s => s.ticker !== ticker);
+      saveWatchlist();
+      renderWatchlist();
+    }
+
+    function renderWatchlist() {
+      const tbody = document.getElementById('watchlistTable');
+      if (watchlist.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" class="py-8 text-center text-gray-500">
+          <div class="text-4xl mb-2">⭐</div>Your watchlist is empty. Save stocks from the Oversold or Analyze tabs!</td></tr>`;
+        return;
+      }
+      tbody.innerHTML = watchlist.map(s => {
+        const color = s.signal === '🟢 Oversold' ? 'text-green-400' : s.signal === '🔴 Overbought' ? 'text-red-400' : 'text-yellow-400';
+        return `<tr class="border-b border-blue-900/20">
+          <td class="py-3 pr-4 font-mono font-bold text-blue-400">${s.ticker}</td>
+          <td class="py-3 pr-4">${s.name||'-'}</td>
+          <td class="py-3 pr-4 text-right font-mono">${s.price?'$'+s.price.toFixed(2):'...'}</td>
+          <td class="py-3 pr-4 text-right font-mono ${s.willr<-80?'text-green-400':s.willr<-50?'text-yellow-400':'text-red-400'}">${s.willr?s.willr.toFixed(1):'...'}</td>
+          <td class="py-3 pr-4 text-right">${s.rsi?s.rsi.toFixed(1):'...'}</td>
+          <td class="py-3 text-center ${color} font-semibold">${s.signal||'...'}</td>
+          <td class="py-3 text-center text-gray-500 text-xs">${s.added}</td>
+          <td class="py-3 text-center">
+            <button onclick="refreshWatchlistItem('${s.ticker}')" class="text-blue-400 hover:text-blue-300 text-xs px-2 py-1 mr-1">🔄</button>
+            <button onclick="removeFromWatchlist('${s.ticker}')" class="text-red-400 hover:text-red-300 text-xs px-2 py-1">✕</button>
+          </td>
+        </tr>`;
+      }).join('');
+    }
+
+    async function refreshWatchlistItem(ticker) {
+      try {
+        const r = await fetch(`/api/stock?ticker=${ticker}`);
+        const d = await r.json();
+        if (d && d.chart && d.chart.result) {
+          const q = d.chart.result[0];
+          const meta = q.meta;
+          const closes = q.indicators.quote[0].close.filter(Boolean);
+          const highs = q.indicators.quote[0].high.filter(Boolean);
+          const lows = q.indicators.quote[0].low.filter(Boolean);
+          const rsi = calcRSI(closes, 14);
+          const willr = calcWilliamsR(highs, lows, closes);
+          const signal = willr < -80 ? '🟢 Oversold' : willr < -50 ? '🟡 Neutral' : '🔴 Overbought';
+          const idx = watchlist.findIndex(s => s.ticker === ticker);
+          if (idx > -1) {
+            watchlist[idx] = { ...watchlist[idx], name: meta.shortName||meta.symbol, price: meta.regularMarketPrice, willr, rsi, signal };
+            saveWatchlist();
+            renderWatchlist();
+          }
+        }
+      } catch(e) { console.error(e); }
+    }
+
+    async function refreshWatchlist() {
+      document.getElementById('watchlist-loading').classList.remove('hidden');
+      for (const s of watchlist) { await refreshWatchlistItem(s.ticker); await new Promise(r => setTimeout(r, 200)); }
+      document.getElementById('watchlist-loading').classList.add('hidden');
+    }
+
+    function clearWatchlist() {
+      if (confirm('Clear entire watchlist?')) {
+        watchlist = [];
+        saveWatchlist();
+        renderWatchlist();
+      }
+    }
+
+    function exportWatchlist() {
+      const csv = 'Ticker,Name,Price,Williams %R,RSI,Signal,Added\n' + 
+        watchlist.map(s => `${s.ticker},"${s.name||''}",${s.price||''},${s.willr||''},${s.rsi||''},"${s.signal||''}",${s.added}`).join('\n');
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+      a.download = `watchlist_${new Date().toISOString().split('T')[0]}.csv`; a.click();
+    }
+
+    function quickAddWatchlist() {
+      const t = document.getElementById('quick-ticker').value.trim().toUpperCase();
+      if (!t) return;
+      addToWatchlist(t, t, null, null, null, 'Pending');
+      document.getElementById('quick-ticker').value = '';
+      document.getElementById('status').textContent = `${t} added to watchlist`;
+    }
+
+    // ===== SCANS =====
+    async function runScan(type) {
+      if (type === 'clear') {
+        document.getElementById('oversoldTable').innerHTML = `<tr><td colspan="7" class="py-8 text-center text-gray-500"><div class="text-4xl mb-2">📊</div>Click a scan button above to find oversold stocks</td></tr>`;
+        return;
+      }
+      const tickers = STOCK_SETS[type] || [];
+      document.getElementById('oversold-loading').classList.remove('hidden');
+      document.getElementById('oversoldTable').innerHTML = '';
+      document.getElementById('status').textContent = `Scanning ${tickers.length} stocks...`;
+      
+      let results = [];
+      for (const t of tickers) {
+        try {
+          const r = await fetch(`/api/stock?ticker=${t}`);
+          const d = await r.json();
+          if (d && d.chart && d.chart.result) {
+            const q = d.chart.result[0];
+            const meta = q.meta;
+            const closes = q.indicators.quote[0].close.filter(Boolean);
+            const highs = q.indicators.quote[0].high.filter(Boolean);
+            const lows = q.indicators.quote[0].low.filter(Boolean);
+            const rsi = calcRSI(closes, 14);
+            const willr = calcWilliamsR(highs, lows, closes);
+            const signal = willr < -80 ? '🟢 Oversold' : willr < -50 ? '🟡 Neutral' : '🔴 Overbought';
+            results.push({ ticker: t, name: meta.shortName||meta.symbol, price: meta.regularMarketPrice, willr, rsi, signal });
+          }
+        } catch(e) { console.error(t, e); }
+        await new Promise(r => setTimeout(r, 150));
+      }
+      
+      results.sort((a,b) => a.willr - b.willr);
+      document.getElementById('oversold-loading').classList.add('hidden');
+      document.getElementById('status').textContent = `Found ${results.filter(r=>r.willr<-80).length} oversold in ${type}`;
+      
+      document.getElementById('oversoldTable').innerHTML = results.map(s => {
+        const color = s.signal === '🟢 Oversold' ? 'text-green-400' : s.signal === '🔴 Overbought' ? 'text-red-400' : 'text-yellow-400';
+        const inWL = watchlist.some(w => w.ticker === s.ticker);
+        return `<tr class="border-b border-blue-900/20">
+          <td class="py-3 pr-4 font-mono font-bold text-blue-400">${s.ticker}</td>
+          <td class="py-3 pr-4">${s.name}</td>
+          <td class="py-3 pr-4 text-right font-mono">$${s.price?.toFixed(2)||'...'}</td>
+          <td class="py-3 pr-4 text-right font-mono font-bold ${color}">${s.willr.toFixed(1)}</td>
+          <td class="py-3 pr-4 text-right">${s.rsi.toFixed(1)}</td>
+          <td class="py-3 text-center ${color} font-semibold">${s.signal}</td>
+          <td class="py-3 text-center">
+            <button onclick="saveFromScan('${s.ticker}','${s.name}',${s.price},${s.willr},${s.rsi},'${s.signal}')" 
+              class="${inWL?'text-gray-500 cursor-default':'text-green-400 hover:text-green-300'} text-sm px-2 py-1">
+              ${inWL?'✓ Saved':'⭐ Save'}
+            </button>
+          </td>
+        </tr>`;
+      }).join('');
+    }
+
+    function saveFromScan(ticker, name, price, willr, rsi, signal) {
+      const r = addToWatchlist(ticker, name, price, willr, rsi, signal);
+      document.getElementById('status').textContent = r.msg;
+      if (r.ok) runScan(document.querySelector('[id^="oversoldTable"] tr td.font-mono') ? '' : 'popular');
+    }
+
+    // ===== ANALYZE =====
+    async function lookupTicker() {
+      const t = document.getElementById('ticker-input').value.trim().toUpperCase();
+      if (!t) return;
+      document.getElementById('analyze-result').classList.add('hidden');
+      document.getElementById('result-loading').classList.remove('hidden');
+      document.getElementById('status').textContent = 'Fetching...';
+      try {
+        const r = await fetch(`/api/stock?ticker=${encodeURIComponent(t)}`);
+        const d = await r.json();
+        document.getElementById('result-loading').classList.add('hidden');
+        document.getElementById('status').textContent = 'Ready';
+        if (d && d.chart && d.chart.result) {
+          const q = d.chart.result[0];
+          const meta = q.meta;
+          const closes = q.indicators.quote[0].close.filter(Boolean);
+          const highs = q.indicators.quote[0].high.filter(Boolean);
+          const lows = q.indicators.quote[0].low.filter(Boolean);
+          const rsi = calcRSI(closes, 14);
+          const willr = calcWilliamsR(highs, lows, closes);
+          const signal = willr < -80 ? '🟢 Oversold' : willr < -50 ? '🟡 Neutral' : '🔴 Overbought';
+          const color = willr < -80 ? 'text-green-400' : willr < -50 ? 'text-yellow-400' : 'text-red-400';
+          const inWL = watchlist.some(s => s.ticker === t);
+          document.getElementById('analyze-result').innerHTML = `
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4">
+              <div><div class="text-xs text-gray-500">Price</div><div class="text-2xl font-bold text-white">$${meta.regularMarketPrice?.toFixed(2)}</div></div>
+              <div><div class="text-xs text-gray-500">Williams %R</div><div class="text-2xl font-bold ${color}">${willr.toFixed(1)}</div></div>
+              <div><div class="text-xs text-gray-500">RSI(14)</div><div class="text-2xl font-bold ${rsi>70?'text-red-400':rsi<30?'text-green-400':'text-yellow-400'}">${rsi.toFixed(1)}</div></div>
+              <div><div class="text-xs text-gray-500">Signal</div><div class="text-2xl font-bold ${color}">${signal}</div></div>
+            </div>
+            <div class="flex gap-3 mt-4">
+              <button onclick="addToWatchlistFromAnalyze('${t}','${meta.shortName||meta.symbol}',${meta.regularMarketPrice},${willr},${rsi},'${signal}')" 
+                class="${inWL?'btn-success':'btn-primary'} text-white font-semibold px-5 py-2 rounded-lg">
+                ${inWL?'✓ Already in Watchlist':'⭐ Add to Watchlist'}
+              </button>
+            </div>`;
+          document.getElementById('analyze-result').classList.remove('hidden');
+        } else {
+          document.getElementById('analyze-result').innerHTML=`<div class="text-red-400">Ticker "${t}" not found. Try US tickers like AAPL, MSFT, UUUU.</div>`;
+          document.getElementById('analyze-result').classList.remove('hidden');
+        }
+      } catch(e) {
+        document.getElementById('result-loading').classList.add('hidden');
+        document.getElementById('status').textContent = 'Error';
+        document.getElementById('analyze-result').innerHTML=`<div class="text-red-400">Error: ${e.message}</div>`;
+        document.getElementById('analyze-result').classList.remove('hidden');
+      }
+    }
+
+    function addToWatchlistFromAnalyze(ticker, name, price, willr, rsi, signal) {
+      const r = addToWatchlist(ticker, name, price, willr, rsi, signal);
+      document.getElementById('status').textContent = r.msg;
+      if (r.ok) lookupTicker();
+    }
+
+    // ===== INDICATORS =====
+    function calcRSI(closes, period=14) {
+      if (closes.length < period+1) return 50;
+      let gains=0,losses=0;
+      for(let i=closes.length-period;i<closes.length;i++){
+        const diff=closes[i]-closes[i-1];
+        if(diff>0)gains+=diff;else losses-=diff;
+      }
+      const avgGain=gains/period,avgLoss=losses/period;
+      if(avgLoss===0)return 100;
+      return 100-(100/(1+avgGain/avgLoss));
+    }
+
+    function calcWilliamsR(highs, lows, closes) {
+      const n=14;
+      const hi=Math.max(...highs.slice(-n));
+      const lo=Math.min(...lows.slice(-n));
+      const last=closes[closes.length-1];
+      if(hi===lo)return -50;
+      return ((hi-last)/(hi-lo))*(-100);
+    }
+  </script>
+</body>
+</html>
